@@ -1,9 +1,14 @@
 export async function handleGenAIRequest(req, res) {
-    try {
-      const { prompt } = req.body;
-      // ⚠️ 여기에 실제 GenAI API 연동 코드 추가 예정
-      res.json({ response: `Generated result for: ${prompt}` });
-    } catch (error) {
-      res.status(500).json({ error: 'GenAI request failed' });
-    }
+  try {
+    const { prompt } = req.body
+
+    // 나중에: const result = await generateFromPrompt(prompt)
+    const result = `Generated result for: ${prompt}`
+
+    res.json({ response: result })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'GenAI request failed' })
   }
+}
+
