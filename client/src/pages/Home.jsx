@@ -7,9 +7,9 @@ export default function Home() {
 
   const sections = [
     { title: 'Onboarding', path: '/onboarding'},
-    { title: 'Storyboard', path: '/storyboard' },
-    { title: 'Sound', path: '/sound' },
-    { title: 'Overview', path: '/review' },
+    { title: 'Scenario Builder', path: '/storyboard' },
+    { title: 'Sound Mapping', path: '/sound' },
+    { title: 'Review', path: '/review' },
   ]
 
   return (
@@ -17,7 +17,7 @@ export default function Home() {
       {sections.map((section, index) => (
         <div
           key={index}
-          className="bg-blue-100 shadow-md rounded-lg p-6 flex items-center justify-between hover:shadow-lg transition"
+          className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between"
         >
           <div className="text-lg font-semibold">{section.title}</div>
           <Button onClick={() => navigate(section.path)}>Move</Button>
