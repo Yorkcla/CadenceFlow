@@ -1,13 +1,15 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import Button from '../components/Button'
 
 export default function Home() {
   const navigate = useNavigate()
 
   const sections = [
-    { title: '스토리보드 만들기', icon: '📘', path: '/storyboard' },
-    { title: '사운드 배치하기', icon: '🎵', path: '/sound' },
-    { title: '최종 확인하기', icon: '✅', path: '/review' },
+    { title: 'Onboarding', path: '/onboarding'},
+    { title: 'Storyboard', path: '/storyboard' },
+    { title: 'Sound', path: '/sound' },
+    { title: 'Overview', path: '/review' },
   ]
 
   return (
@@ -15,18 +17,10 @@ export default function Home() {
       {sections.map((section, index) => (
         <div
           key={index}
-          className="bg-white shadow-md rounded-lg p-6 flex items-center justify-between hover:shadow-lg transition"
+          className="bg-blue-100 shadow-md rounded-lg p-6 flex items-center justify-between hover:shadow-lg transition"
         >
-          <div className="text-lg font-semibold flex items-center gap-2">
-            <span className="text-2xl">{section.icon}</span>
-            {section.title}
-          </div>
-          <button
-            onClick={() => navigate(section.path)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
-          >
-            이동하기
-          </button>
+          <div className="text-lg font-semibold">{section.title}</div>
+          <Button onClick={() => navigate(section.path)}>Move</Button>
         </div>
       ))}
     </div>

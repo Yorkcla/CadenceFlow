@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 export default function Navbar() {
   return (
     <nav className="bg-gray-800 text-white p-4">
-      <Link className="mr-4" to="/">홈</Link>
+      <Link className="mr-4" to="/">Platform</Link>
     </nav>
   )
 }
