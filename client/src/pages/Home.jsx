@@ -9,8 +9,8 @@ export default function Home() {
   const sections = [
     { title: 'Onboarding', path: '/onboarding' },
     { title: 'Storyboarding', path: '/storyboard' },
-    { title: 'Assigning Sound', path: '/soundboard' },
-    { title: 'Final Overview', path: '/overview' },
+    { title: 'Assigning Sounds', path: '/soundboard' },
+    { title: 'Reviewing', path: '/review' },
   ]
 
   return (

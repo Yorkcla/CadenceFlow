@@ -4,7 +4,7 @@ import SquareButton from '../components/SquareButton'
 const onboardingSteps = [
   { id: 1, title: 'Step 1: Basic Intro and Tool Purpose', video: 'https://via.placeholder.com/400x250?text=Video+1' },
   { id: 2, title: 'Step 2: Storyboarding and Sound Assignment', video: 'https://via.placeholder.com/400x250?text=Video+2' },
-  { id: 3, title: 'Step 3: Final Overview with Comparison', video: 'https://via.placeholder.com/400x250?text=Video+3' },
+  { id: 3, title: 'Step 3: Final Review with Comparison', video: 'https://via.placeholder.com/400x250?text=Video+3' },
 ]
 
 export default function Onboarding() {

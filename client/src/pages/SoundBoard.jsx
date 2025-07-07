@@ -8,7 +8,7 @@ export default function SoundBoard() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8">
-      <h2 className="text-2xl font-bold">Sound Assignment</h2>
+      <h2 className="text-2xl font-bold">Assigning Sounds</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {phases.map((phase) => (

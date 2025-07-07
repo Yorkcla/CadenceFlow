@@ -4,7 +4,7 @@ import Home from './pages/Home'
 import Onboarding from './pages/Onboarding'
 import Storyboard from './pages/Storyboard'
 import SoundBoard from './pages/SoundBoard'
-import Overview from './pages/Overview'
+import Review from './pages/Review'
 import Navbar from './components/Navbar'
 import StepBoard from './pages/StepBoard'
 import LoginModal from './components/LoginModal'
@@ -31,7 +31,7 @@ export default function App() {
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/storyboard" element={<Storyboard />} />
             <Route path="/soundboard" element={<SoundBoard />} />
-            <Route path="/overview" element={<Overview />} />
+            <Route path="/review" element={<Review />} />
             <Route path="/phase/:phaseId/steps" element={<StepBoard />} />
           </Routes>
         </>

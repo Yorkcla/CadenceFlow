@@ -8,13 +8,13 @@ export default function Navbar() {
   return (
     <nav className="bg-white text-gray-900 px-6 py-4 shadow border-b flex justify-between items-center">
       <div className="flex gap-6 items-center">
-        <NavLink to="/" className="font-bold text-lg mr-4">
+        <NavLink to="/" className="font-bold text-md mr-4">
           CadenceFlow
         </NavLink>
         <NavLink
           to="/onboarding"
           className={({ isActive }) =>
-            isActive ? "text-blue-600 font-semibold" : "text-gray-700"
+            isActive ? "text-blue-400 font-semibold" : "text-gray-700"
           }
         >
           Onboarding
@@ -22,7 +22,7 @@ export default function Navbar() {
         <NavLink
           to="/storyboard"
           className={({ isActive }) =>
-            isActive ? "text-blue-600 font-semibold" : "text-gray-700"
+            isActive ? "text-blue-400 font-semibold" : "text-gray-700"
           }
         >
           Storyboarding
@@ -30,25 +30,25 @@ export default function Navbar() {
         <NavLink
           to="/soundboard"
           className={({ isActive }) =>
-            isActive ? "text-blue-600 font-semibold" : "text-gray-700"
+            isActive ? "text-blue-400 font-semibold" : "text-gray-700"
           }
         >
           Assigning Sounds
         </NavLink>
         <NavLink
-          to="/overview"
+          to="/review"
           className={({ isActive }) =>
-            isActive ? "text-blue-600 font-semibold" : "text-gray-700"
+            isActive ? "text-blue-400 font-semibold" : "text-gray-700"
           }
         >
-          Final Overview
+          Reviewing
         </NavLink>
       </div>
       <button
         onClick={logout}
-        className="px-2 py-0 bg-blue-200 text-white rounded hover:bg-blue-600 transition"
+        className="px-2 py-0 bg-blue-200 text-white rounded hover:bg-blue-400 transition"
       >
-        👋
+      👋
       </button>
     </nav>
   )
