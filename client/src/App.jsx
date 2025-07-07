@@ -6,6 +6,7 @@ import Storyboard from './pages/Storyboard'
 import Sound from './pages/Sound'
 import Overview from './pages/Overview'
 import Navbar from './components/Navbar'
+import StepBoard from './pages/StepBoard'
 
 export default function App() {
   const location = useLocation()
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/storyboard" element={<Storyboard />} />
         <Route path="/sound" element={<Sound />} />
         <Route path="/overview" element={<Overview />} />
+        <Route path="/phase/:phaseId/steps" element={<StepBoard />} />
       </Routes>
     </div>
   )

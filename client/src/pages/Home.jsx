@@ -19,13 +19,13 @@ export default function Home() {
       </div>
       {/* 상단 Participant ID 입력 */}
       <div className="w-full max-w-md mb-6 flex items-center gap-2">
-        <label className="text-sm text-gray-700 font-medium" htmlFor="userId">Participant ID</label>
+        <label className="text-sm text-gray-700 font-medium" htmlFor="userId">G’day, who’s this?</label>
         <input
           id="userId"
           type="text"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
-          placeholder="e.g. p01"
+          placeholder="e.g. Minsik, p01"
           className="h-8 w-40 border rounded px-2 text-sm"
         />
       </div>
