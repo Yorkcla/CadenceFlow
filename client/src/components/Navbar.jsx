@@ -46,7 +46,7 @@ export default function Navbar() {
       </div>
       <button
         onClick={logout}
-        className="px-2 py-0 bg-blue-200 text-white rounded hover:bg-blue-400 transition"
+        className="px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"
       >
       👋
       </button>

@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import SquareButton from '../components/SquareButton'
 
 const onboardingSteps = [
-  { id: 1, title: 'Step 1: Basic Intro and Tool Purpose', video: 'https://via.placeholder.com/400x250?text=Video+1' },
-  { id: 2, title: 'Step 2: Storyboarding and Sound Assignment', video: 'https://via.placeholder.com/400x250?text=Video+2' },
-  { id: 3, title: 'Step 3: Final Review with Comparison', video: 'https://via.placeholder.com/400x250?text=Video+3' },
+  { id: 1, title: 'Basic Intro with Tool Purpose', video: 'https://via.placeholder.com/400x250?text=Video+1' },
+  { id: 2, title: 'Storyboarding and Sound Assignment', video: 'https://via.placeholder.com/400x250?text=Video+2' },
+  { id: 3, title: 'Final Review with Comparison', video: 'https://via.placeholder.com/400x250?text=Video+3' },
 ]
 
 export default function Onboarding() {
@@ -29,7 +29,7 @@ export default function Onboarding() {
       <div className="flex space-x-4">
         <SquareButton onClick={prevStep} disabled={stepIndex === 0}>Previous</SquareButton>
         <SquareButton onClick={nextStep} disabled={stepIndex === onboardingSteps.length - 1}>Next</SquareButton>
-        <SquareButton onClick={() => setShowModal(true)}>Question?</SquareButton>
+        <SquareButton onClick={() => setShowModal(true)}>❓</SquareButton>
       </div>
 
       {showModal && (
@@ -41,7 +41,7 @@ export default function Onboarding() {
             >
               ✕
             </button>
-            <h3 className="text-xl font-bold">AI Chatbot style</h3>
+            <h3 className="text-xl font-bold">CadenceFlow</h3>
             <div className="border rounded-md h-40 p-2 text-gray-500 flex items-center justify-center">
               <p>(Chat history will appear here)</p>
             </div>
