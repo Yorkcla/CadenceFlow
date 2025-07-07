@@ -1,3 +1,4 @@
+// src/pages/Home.jsx
 import React from 'react'
 import { Link } from 'react-router-dom'
 import useStore from '../store/useStore'
@@ -17,19 +18,6 @@ export default function Home() {
       <div className="w-full max-w-md mb-8 text-center">
         <h1 className="text-2xl font-bold text-gray-800">CadenceFlow</h1>
       </div>
-      {/* 상단 Participant ID 입력 */}
-      <div className="w-full max-w-md mb-6 flex items-center gap-2">
-        {/* 인사말을 일단 비워뒀음 */}
-        <label className="text-sm text-gray-700 font-medium" htmlFor="userId"></label>
-        <input
-          id="userId"
-          type="text"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          placeholder="Hey, who’s this?"
-          className="h-8 w-40 border rounded px-2 text-sm"
-        />
-      </div>
       {/* 가운데 박스 정사각형 4개 */}
       <div className="grid grid-cols-2 gap-10">
         {sections.map((section, index) => (
@@ -45,5 +33,6 @@ export default function Home() {
     </div>
   )
 }
+
 
 
