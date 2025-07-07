@@ -8,7 +8,7 @@ export default function Home() {
   const sections = [
     { title: 'Onboarding', path: '/onboarding' },
     { title: 'Storyboarding', path: '/storyboard' },
-    { title: 'Assigning Sound', path: '/sound' },
+    { title: 'Assigning Sound', path: '/soundboard' },
     { title: 'Final Overview', path: '/overview' },
   ]
 
@@ -19,13 +19,14 @@ export default function Home() {
       </div>
       {/* 상단 Participant ID 입력 */}
       <div className="w-full max-w-md mb-6 flex items-center gap-2">
-        <label className="text-sm text-gray-700 font-medium" htmlFor="userId">G’day, who’s this?</label>
+        {/* 인사말을 일단 비워뒀음 */}
+        <label className="text-sm text-gray-700 font-medium" htmlFor="userId"></label>
         <input
           id="userId"
           type="text"
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
-          placeholder="e.g. Minsik, p01"
+          placeholder="Hey, who’s this?"
           className="h-8 w-40 border rounded px-2 text-sm"
         />
       </div>

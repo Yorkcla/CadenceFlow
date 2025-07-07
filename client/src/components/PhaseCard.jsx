@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom'
 export default function PhaseCard({ phase }) {
   const { phases, setPhases } = useStore()
   const [loading, setLoading] = useState(false)
+  const [imageLoading, setImageLoading] = useState(false)
+  const [imageUrl, setImageUrl] = useState(phase.imageUrl || '')
 
   const handleChange = (field, value) => {
     const updated = phases.map((p) =>
@@ -21,9 +23,32 @@ export default function PhaseCard({ phase }) {
     setLoading(false)
   }
 
+  const handleAiImage = async () => {
+    setImageLoading(true)
+    const url = await fakeGeminiImage(phase.description)
+    setImageUrl(url)
+    handleChange('imageUrl', url)
+    setImageLoading(false)
+  }
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const url = URL.createObjectURL(file)
+      setImageUrl(url)
+      handleChange('imageUrl', url)
+    }
+  }
+
   const fakeGeminiEdit = async (text) => {
     return new Promise((res) =>
       setTimeout(() => res(`[AI Result] ${text}`), 1000)
+    )
+  }
+
+  const fakeGeminiImage = async (text) => {
+    return new Promise((res) =>
+      setTimeout(() => res(`https://via.placeholder.com/300x180?text=${encodeURIComponent(text)}`), 1500)
     )
   }
 
@@ -44,22 +69,33 @@ export default function PhaseCard({ phase }) {
         rows={3}
       />
 
+      {/* 이미지 미리보기 */}
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt="Generated"
+          className="rounded-lg w-full object-cover border"
+        />
+      )}
+
+      {/* 버튼들 */}
       <div className="text-right flex items-center justify-end gap-2">
-        {loading && (
-          <div className="text-xs text-gray-500 animate-pulse">
-            ✨...
-          </div>
-        )}
-        <MiniSquareButton onClick={handleAiEdit} disabled={loading}>
-          ✏️
-        </MiniSquareButton>
+        {loading && <div className="text-xs text-gray-500 italic mr-auto">✏️ Editing...</div>}
+        <MiniSquareButton onClick={handleAiEdit} disabled={loading}>✏️</MiniSquareButton>
+        {imageLoading && <div className="text-xs text-gray-500 italic mr-auto">🎨 Drawing...</div>}
+        <MiniSquareButton onClick={handleAiImage} disabled={imageLoading}>🖼️</MiniSquareButton>
+        <label className="cursor-pointer">
+          <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+          <MiniSquareButton>📁</MiniSquareButton>
+        </label>
         <Link to={`/phase/${phase.id}/steps`}>
-            <MiniSquareButton>📋</MiniSquareButton>
+          <MiniSquareButton>📋</MiniSquareButton>
         </Link>
       </div>
     </div>
   )
 }
+
 
 
 

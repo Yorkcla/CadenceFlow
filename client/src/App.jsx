@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Onboarding from './pages/Onboarding'
 import Storyboard from './pages/Storyboard'
-import Sound from './pages/Sound'
+import SoundBoard from './pages/SoundBoard'
 import Overview from './pages/Overview'
 import Navbar from './components/Navbar'
 import StepBoard from './pages/StepBoard'
@@ -19,7 +19,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/storyboard" element={<Storyboard />} />
-        <Route path="/sound" element={<Sound />} />
+        <Route path="/soundboard" element={<SoundBoard />} />
         <Route path="/overview" element={<Overview />} />
         <Route path="/phase/:phaseId/steps" element={<StepBoard />} />
       </Routes>

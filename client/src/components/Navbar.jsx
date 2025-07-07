@@ -25,7 +25,7 @@ export default function Navbar() {
         Storyboarding
       </NavLink>
       <NavLink
-        to="/sound"
+        to="/soundboard"
         className={({ isActive }) =>
           isActive ? "text-blue-600 font-semibold" : "text-gray-700"
         }
