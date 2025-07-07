@@ -80,9 +80,12 @@ export default function PhaseCard({ phase }) {
 
       {/* 버튼들 */}
       <div className="text-right flex items-center justify-end gap-2">
-        {loading && <div className="text-xs text-gray-500 italic mr-auto">✏️ Editing...</div>}
+        {(loading || imageLoading) && (
+          <div className="text-xs text-gray-500 italic mr-auto">
+            {loading && '✏️ Editing...'} {imageLoading && '🎨 Drawing...'}
+          </div>
+        )}
         <MiniSquareButton onClick={handleAiEdit} disabled={loading}>✏️</MiniSquareButton>
-        {imageLoading && <div className="text-xs text-gray-500 italic mr-auto">🎨 Drawing...</div>}
         <MiniSquareButton onClick={handleAiImage} disabled={imageLoading}>🖼️</MiniSquareButton>
         <label className="cursor-pointer">
           <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
