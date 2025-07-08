@@ -3,7 +3,8 @@ import useStore from '../store/useStore'
 import PhaseCard from '../components/PhaseCard'
 import SquareButton from '../components/SquareButton'
 import ProjectNameModal from '../components/ProjectNameModal'
-import { v4 as uuidv4 } from 'uuid'
+import { savePhasesToFirestore } from '../utils/savePhases'
+import { uploadImageToStorage } from '../utils/uploadImageToStorage'
 
 export default function Storyboard() {
   const {
@@ -28,7 +29,7 @@ export default function Storyboard() {
   }, [projectId])
 
   const handleProjectNameSubmit = (name) => {
-    const uniqueProjectId = `${userId || 'guest'}-${name}-${uuidv4()}`
+    const uniqueProjectId = `${userId || 'guest'}-${name}`
     setProjectId(uniqueProjectId)
     setProjectTitle(name) // ✅ 프로젝트 타이틀 저장
     setShowModal(false)
@@ -62,6 +63,27 @@ export default function Storyboard() {
     setPhases(phases.slice(0, -1))
   }
 
+  const handleSave = async () => {
+    try {
+      // Step 1: 모든 phase의 imageUrl이 blob이면 업로드
+      const updatedPhases = await Promise.all(phases.map(async (phase) => {
+        if (phase.imageUrl.startsWith('blob:')) {
+          const blob = await fetch(phase.imageUrl).then(res => res.blob())
+          const url = await uploadImageToStorage(blob, userId, projectId, phase.id)
+          return { ...phase, imageUrl: url }
+        }
+        return phase
+      }))
+  
+      // Step 2: Firestore에 저장
+      await savePhasesToFirestore(userId, projectId, projectTitle, updatedPhases)
+      alert('Phases saved successfully!')
+    } catch (error) {
+      console.error('Error saving phases:', error)
+      alert('Failed to save phases.')
+    }
+  }  
+
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       {showModal && <ProjectNameModal onSubmit={handleProjectNameSubmit} />}
@@ -75,8 +97,9 @@ export default function Storyboard() {
           <PhaseCard key={phase.id} phase={phase} />
         ))}
         <div className="flex flex-col gap-2">
-          <SquareButton onClick={handleAddPhase}>+ Add Phase</SquareButton>
-          <SquareButton onClick={handleRemoveLastPhase}>❌ Remove</SquareButton>
+          <SquareButton onClick={handleAddPhase}>+</SquareButton>
+          <SquareButton onClick={handleRemoveLastPhase}>❌</SquareButton>
+          <SquareButton onClick={handleSave}>💾</SquareButton>
         </div>
       </div>
     </div>

@@ -1,20 +1,24 @@
 // src/utils/savePhases.js
-import { db } from '../firebase'
+import { db } from './firebase'
 import { doc, setDoc } from 'firebase/firestore'
 
-export const savePhasesToFirestore = async (userId, projectId, phases) => {
+export const savePhasesToFirestore = async (userId, projectId, projectTitle, phases) => {
   if (!userId || !projectId) {
-    console.warn('⚠️ userId or projectId missing – cannot save.')
+    console.error('userId or projectId is missing')
     return
   }
 
   try {
-    await setDoc(doc(db, 'projects', `${userId}_${projectId}`), {
-      phases,
+    const ref = doc(db, 'users', userId, 'projects', projectId)
+    await setDoc(ref, {
+      title: projectTitle,
       updatedAt: new Date().toISOString(),
+      phases: phases,
     })
-    console.log('✅ Phases saved to Firestore.')
+
+    console.log('Phases saved successfully!')
   } catch (error) {
-    console.error('❌ Error saving phases:', error)
+    console.error('Error saving phases:', error)
   }
 }
+
