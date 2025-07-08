@@ -1,38 +1,35 @@
-import React, { useId, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import P5Canvas from './P5Canvas'
+import toast from 'react-hot-toast'
 
-export default function StepCard({ step, onChange }) {
+export default function StepCard({ step, onChange, canvasRef }) {
   const [isEditing, setIsEditing] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [showCanvas, setShowCanvas] = useState(false)
-  const canvasRef = useRef(null) // ✅ 캔버스 참조
-  const uploadId = useId()
 
-  const handleChange = (value) => {
-    onChange({ ...step, description: value })
+  const handleChange = (field, value) => {
+    onChange({ ...step, [field]: value })
   }
 
   const handleAiEdit = async () => {
     setIsEditing(true)
     const revised = await fakeGeminiEdit(step.description)
-    handleChange(revised)
+    handleChange('description', revised)
     setIsEditing(false)
   }
 
-  const handleImageGenerate = async () => {
+  const handleAiImage = async () => {
     setIsGenerating(true)
-    const imageUrl = await fakeGenerateImage(step.description)
-    onChange({ ...step, imageUrl })
+    const url = await fakeGeminiImage(step.description)
+    handleChange('imageUrl', url)
     setIsGenerating(false)
   }
 
-  const handleFileUpload = (e) => {
+  const handleImageUpload = (e) => {
     const file = e.target.files[0]
-    if (!file) return
-    const url = URL.createObjectURL(file)
-
-    if (file.type.startsWith('image/')) {
-      onChange({ ...step, imageUrl: url })
+    if (file && file.type.startsWith('image/')) {
+      const url = URL.createObjectURL(file)
+      handleChange('imageUrl', url)
     }
   }
 
@@ -40,8 +37,18 @@ export default function StepCard({ step, onChange }) {
     if (canvasRef.current?.getCanvasBlob) {
       const blob = await canvasRef.current.getCanvasBlob()
       const url = URL.createObjectURL(blob)
-      onChange({ ...step, imageUrl: url })
+      handleChange('imageUrl', url)
+      setShowCanvas(false)
+      toast.success('Canvas saved!') // ✅ 알림 추가
     }
+  }
+
+  const fakeGeminiEdit = async (text) => {
+    return new Promise((res) => setTimeout(() => res(`[AI Result] ${text}`), 1000))
+  }
+
+  const fakeGeminiImage = async (text) => {
+    return new Promise((res) => setTimeout(() => res(`https://via.placeholder.com/300x180?text=${encodeURIComponent(text)}`), 1500))
   }
 
   return (
@@ -49,17 +56,16 @@ export default function StepCard({ step, onChange }) {
       <input
         type="text"
         value={step.description}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => handleChange('description', e.target.value)}
         placeholder="Step description"
         className="text-sm w-full border-b border-gray-300 pb-1 focus:outline-none"
       />
 
-      {/* 이미지 공간 */}
-      <div className="relative w-full h-40 bg-gray-100 rounded-md border overflow-hidden">
+      <div className="relative w-full h-40 border bg-gray-100 rounded overflow-hidden">
         {step.imageUrl ? (
-          <img src={step.imageUrl} alt="Generated" className="absolute inset-0 w-full h-full object-cover" />
+          <img src={step.imageUrl} alt="Step" className="absolute inset-0 w-full h-full object-cover" />
         ) : showCanvas ? (
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 z-10">
             <P5Canvas ref={canvasRef} />
           </div>
         ) : (
@@ -69,7 +75,6 @@ export default function StepCard({ step, onChange }) {
         )}
       </div>
 
-      {/* 버튼 */}
       <div className="flex items-center justify-end gap-2">
         {(isEditing || isGenerating) && (
           <div className="text-xs text-gray-500 italic mr-auto">
@@ -77,33 +82,22 @@ export default function StepCard({ step, onChange }) {
           </div>
         )}
 
-        <button onClick={handleAiEdit} disabled={isEditing || isGenerating} className="w-8 h-8 bg-blue-100 border rounded-md shadow text-xs">
-          ✏️
-        </button>
+        <button onClick={handleAiEdit} disabled={isEditing || isGenerating} className="w-8 h-8 bg-blue-100 border rounded shadow text-xs">✏️</button>
+        <button onClick={handleAiImage} disabled={isEditing || isGenerating} className="w-8 h-8 bg-blue-100 border rounded shadow text-xs">🖼️</button>
 
-        <button onClick={handleImageGenerate} disabled={isEditing || isGenerating} className="w-8 h-8 bg-blue-100 border rounded-md shadow text-xs">
-          🖼️
-        </button>
+        <input id={`upload-${step.id}`} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+        <label htmlFor={`upload-${step.id}`} className="w-8 h-8 bg-blue-100 border rounded shadow text-xs cursor-pointer flex items-center justify-center">📁</label>
 
-        <input id={uploadId} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-        <label htmlFor={uploadId} className="w-8 h-8 bg-blue-100 border rounded-md shadow text-xs cursor-pointer flex items-center justify-center">
-          📁
-        </label>
+        <button onClick={() => setShowCanvas(!showCanvas)} className="w-8 h-8 bg-blue-100 border rounded shadow text-xs">🧑‍🎨</button>
 
-        <button onClick={() => setShowCanvas(!showCanvas)} className="w-8 h-8 bg-blue-100 border rounded-md shadow text-xs">
-          🧑‍🎨
-        </button>
-
-        {/* ✅ 그림 저장 버튼 */}
         {showCanvas && (
-          <button onClick={handleCanvasSave} className="w-8 h-8 bg-green-100 border rounded-md shadow text-xs">
-            💾
-          </button>
+          <button onClick={handleCanvasSave} className="w-8 h-8 bg-green-100 border rounded shadow text-xs">💾</button>
         )}
       </div>
     </div>
   )
 }
+
 
 
 

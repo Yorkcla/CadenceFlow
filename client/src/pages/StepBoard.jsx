@@ -20,12 +20,12 @@ export default function StepBoard() {
   } = useStore()
 
   const steps = stepsByPhase[phaseId] || []
-  const canvasRefs = useRef([])
+  const canvasRefs = useRef({})  // ✅ step.id 기준으로 저장
 
-  // ✅ 초기 step에 id 부여
+  // ✅ 초기 세팅
   useEffect(() => {
     if (!stepsByPhase[phaseId]) {
-      setSteps(phaseId, [{ id: Date.now(), description: '' }])
+      setSteps(phaseId, [{ id: Date.now(), description: '', imageUrl: '' }])
     }
   }, [phaseId, setSteps, stepsByPhase])
 
@@ -34,7 +34,7 @@ export default function StepBoard() {
   }
 
   const handleAddStep = () => {
-    addStep(phaseId, { id: Date.now(), description: '' })
+    addStep(phaseId, { id: Date.now(), description: '', imageUrl: '' })
   }
 
   const handleRemoveStep = () => {
@@ -44,16 +44,18 @@ export default function StepBoard() {
   const handleSaveSteps = async () => {
     try {
       const updatedSteps = await Promise.all(
-        steps.map(async (step, i) => {
+        steps.map(async (step) => {
           let imageUrl = step.imageUrl
 
-          if (step.imageUrl?.startsWith('blob:')) {
-            const blob = await fetch(step.imageUrl).then((res) => res.blob())
+          // blob: URL이면 Firebase Storage에 업로드
+          if (imageUrl?.startsWith('blob:')) {
+            const blob = await fetch(imageUrl).then((res) => res.blob())
             imageUrl = await uploadStepImageToStorage(blob, userId, projectId, phaseId, step.id)
           }
 
-          if (!imageUrl && canvasRefs.current[i]?.getCanvasBlob) {
-            const blob = await canvasRefs.current[i].getCanvasBlob()
+          // 캔버스 이미지가 있을 경우
+          if (!imageUrl && canvasRefs.current[step.id]?.getCanvasBlob) {
+            const blob = await canvasRefs.current[step.id].getCanvasBlob()
             if (blob) {
               imageUrl = await uploadStepImageToStorage(blob, userId, projectId, phaseId, step.id)
             }
@@ -82,7 +84,7 @@ export default function StepBoard() {
             key={step.id || index}
             step={step}
             onChange={(updated) => handleStepChange(updated, index)}
-            canvasRef={(el) => (canvasRefs.current[index] = el)}
+            canvasRef={(ref) => { canvasRefs.current[step.id] = ref }}
           />
         ))}
 
@@ -95,6 +97,7 @@ export default function StepBoard() {
     </div>
   )
 }
+
 
 
 

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import useStore from '../store/useStore'
 import { Link } from 'react-router-dom'
 import P5Canvas from './P5Canvas'
+import toast from 'react-hot-toast'
 
 export default function PhaseCard({ phase }) {
   const { phases, setPhases } = useStore()
@@ -48,6 +49,7 @@ export default function PhaseCard({ phase }) {
       const url = URL.createObjectURL(blob)
       setImageUrl(url)
       handleChange('imageUrl', url)
+      toast.success('Canvas saved!') // ✅ 알림 추가
     }
   }
 
