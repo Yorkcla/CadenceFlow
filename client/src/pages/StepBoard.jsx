@@ -5,7 +5,7 @@ import SquareButton from '../components/SquareButton'
 
 export default function StepBoard() {
   const { phaseId } = useParams()
-  const [steps, setSteps] = useState([])
+  const [steps, setSteps] = useState([{ description: '' }]) 
 
   const handleStepChange = (updatedStep, index) => {
     const newSteps = [...steps]
@@ -15,6 +15,10 @@ export default function StepBoard() {
 
   const addStep = () => {
     setSteps([...steps, { description: '' }])
+  }
+
+  const removeStep = () => {
+    setSteps(steps.slice(0, -1))
   }
 
   return (
@@ -29,11 +33,17 @@ export default function StepBoard() {
             onChange={(updated) => handleStepChange(updated, index)}
           />
         ))}
-        <SquareButton onClick={addStep}>+ Add Step</SquareButton>
+
+        {/* 버튼 묶음 */}
+        <div className="flex flex-col gap-2">
+          <SquareButton onClick={addStep}>+ Add Step</SquareButton>
+          <SquareButton onClick={removeStep}>❌ Remove</SquareButton>
+        </div>
       </div>
     </div>
   )
 }
+
 
 
 
