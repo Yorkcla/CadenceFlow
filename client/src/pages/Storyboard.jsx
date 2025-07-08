@@ -4,7 +4,7 @@ import PhaseCard from '../components/PhaseCard'
 import SquareButton from '../components/SquareButton'
 import ProjectNameModal from '../components/ProjectNameModal'
 import { savePhasesToFirestore } from '../utils/savePhases'
-import { uploadImageToStorage } from '../utils/uploadImageToStorage'
+import { uploadPhaseImageToStorage } from '../utils/uploadImageToStorage'
 
 export default function Storyboard() {
   const {
@@ -65,25 +65,23 @@ export default function Storyboard() {
 
   const handleSave = async () => {
     try {
-      // Step 1: 모든 phase의 imageUrl이 blob이면 업로드
       const updatedPhases = await Promise.all(phases.map(async (phase) => {
-        if (phase.imageUrl.startsWith('blob:')) {
+        if (phase.imageUrl?.startsWith('blob:')) {
           const blob = await fetch(phase.imageUrl).then(res => res.blob())
-          const url = await uploadImageToStorage(blob, userId, projectId, phase.id)
+          const url = await uploadPhaseImageToStorage(blob, userId, projectId, phase.id)
           return { ...phase, imageUrl: url }
         }
         return phase
       }))
   
-      // Step 2: Firestore에 저장
       await savePhasesToFirestore(userId, projectId, projectTitle, updatedPhases)
       alert('Phases saved successfully!')
     } catch (error) {
       console.error('Error saving phases:', error)
       alert('Failed to save phases.')
     }
-  }  
-
+  }
+  
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       {showModal && <ProjectNameModal onSubmit={handleProjectNameSubmit} />}
