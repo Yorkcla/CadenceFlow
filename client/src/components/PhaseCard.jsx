@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import useStore from '../store/useStore'
-import MiniSquareButton from './MiniSquareButton'
 import { Link } from 'react-router-dom'
-import P5Canvas from './P5Canvas' // 그림판 추가
+import P5Canvas from './P5Canvas'
 
 export default function PhaseCard({ phase }) {
   const { phases, setPhases } = useStore()
@@ -35,7 +34,7 @@ export default function PhaseCard({ phase }) {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
-    if (file) {
+    if (file && file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file)
       setImageUrl(url)
       handleChange('imageUrl', url)
@@ -73,7 +72,6 @@ export default function PhaseCard({ phase }) {
 
       {/* 이미지 or 캔버스 표시 */}
       <div className="relative w-full h-40 border rounded-lg overflow-hidden">
-        {/* 이미지 (있을 경우에만) */}
         {imageUrl && (
           <img
             src={imageUrl}
@@ -81,22 +79,17 @@ export default function PhaseCard({ phase }) {
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
-
-        {/* 캔버스 (켜져 있을 경우) */}
         {showCanvas && (
           <div className="absolute inset-0 z-10">
             <P5Canvas />
           </div>
         )}
-
-        {/* 이미지도 없고 캔버스도 꺼져있을 경우 */}
         {!imageUrl && !showCanvas && (
           <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm bg-gray-100">
             No image
           </div>
         )}
       </div>
-
 
       {/* 버튼들 */}
       <div className="text-right flex items-center justify-end gap-2">
@@ -105,15 +98,48 @@ export default function PhaseCard({ phase }) {
             {loading ? '✏️ Editing...' : '🎨 Drawing...'}
           </div>
         )}
-        <MiniSquareButton onClick={handleAiEdit} disabled={loading || imageLoading}>✏️</MiniSquareButton>
-        <MiniSquareButton onClick={handleAiImage} disabled={loading || imageLoading}>🖼️</MiniSquareButton>
-        <label className="cursor-pointer">
-          <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-          <MiniSquareButton>📁</MiniSquareButton>
+
+        <button
+          onClick={handleAiEdit}
+          disabled={loading || imageLoading}
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
+        >
+          ✏️
+        </button>
+
+        <button
+          onClick={handleAiImage}
+          disabled={loading || imageLoading}
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
+        >
+          🖼️
+        </button>
+
+        <input
+          id={`upload-${phase.id}`}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+        <label
+          htmlFor={`upload-${phase.id}`}
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center cursor-pointer"
+        >
+          📁
         </label>
-        <MiniSquareButton onClick={() => setShowCanvas(!showCanvas)}>🧑‍🎨</MiniSquareButton>
+
+        <button
+          onClick={() => setShowCanvas(!showCanvas)}
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center"
+        >
+          🧑‍🎨
+        </button>
+
         <Link to={`/phase/${phase.id}/steps`}>
-          <MiniSquareButton>📋</MiniSquareButton>
+          <button className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center">
+            📋
+          </button>
         </Link>
       </div>
     </div>

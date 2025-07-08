@@ -1,24 +1,39 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import useStore from '../store/useStore'
 import StepCard from '../components/StepCard'
 import SquareButton from '../components/SquareButton'
 
 export default function StepBoard() {
   const { phaseId } = useParams()
-  const [steps, setSteps] = useState([{ description: '' }]) 
+
+  const {
+    stepsByPhase,
+    setSteps,
+    addStep,
+    updateStep,
+    removeStep
+  } = useStore()
+
+  const steps = stepsByPhase[phaseId] || []
+
+  // phaseId에 해당하는 step이 아예 없으면 기본 step 하나 추가
+  useEffect(() => {
+    if (!stepsByPhase[phaseId]) {
+      setSteps(phaseId, [{ description: '' }])
+    }
+  }, [phaseId, setSteps, stepsByPhase])
 
   const handleStepChange = (updatedStep, index) => {
-    const newSteps = [...steps]
-    newSteps[index] = updatedStep
-    setSteps(newSteps)
+    updateStep(phaseId, index, updatedStep)
   }
 
-  const addStep = () => {
-    setSteps([...steps, { description: '' }])
+  const handleAddStep = () => {
+    addStep(phaseId, { description: '' })
   }
 
-  const removeStep = () => {
-    setSteps(steps.slice(0, -1))
+  const handleRemoveStep = () => {
+    removeStep(phaseId)
   }
 
   return (
@@ -34,15 +49,15 @@ export default function StepBoard() {
           />
         ))}
 
-        {/* 버튼 묶음 */}
         <div className="flex flex-col gap-2">
-          <SquareButton onClick={addStep}>+ Add Step</SquareButton>
-          <SquareButton onClick={removeStep}>❌ Remove</SquareButton>
+          <SquareButton onClick={handleAddStep}>+ Add Step</SquareButton>
+          <SquareButton onClick={handleRemoveStep}>❌ Remove</SquareButton>
         </div>
       </div>
     </div>
   )
 }
+
 
 
 

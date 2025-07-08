@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import MiniSquareButton from './MiniSquareButton'
-import P5Canvas from './P5Canvas' // 캔버스 컴포넌트 import
+import React, { useId, useState } from 'react'
+import P5Canvas from './P5Canvas'
 
 export default function StepCard({ step, onChange }) {
   const [isEditing, setIsEditing] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [showCanvas, setShowCanvas] = useState(false)
+  const uploadId = useId()
 
   const handleChange = (value) => {
     onChange({ ...step, description: value })
@@ -37,10 +37,6 @@ export default function StepCard({ step, onChange }) {
     }
   }
 
-  const toggleCanvas = () => {
-    setShowCanvas((prev) => !prev)
-  }
-
   const fakeGeminiEdit = async (text) => {
     return new Promise((res) =>
       setTimeout(() => res(`[AI Revised] ${text}`), 1000)
@@ -55,7 +51,6 @@ export default function StepCard({ step, onChange }) {
 
   return (
     <div className="bg-white border rounded-xl p-4 shadow space-y-3 w-72">
-      {/* 텍스트 입력 */}
       <input
         type="text"
         value={step.description}
@@ -64,54 +59,65 @@ export default function StepCard({ step, onChange }) {
         className="text-sm w-full border-b border-gray-300 pb-1 focus:outline-none"
       />
 
-      {/* 미디어/캔버스 영역 */}
-      <div className="relative w-full h-40 border rounded-lg overflow-hidden">
-        {step.videoUrl && (
-          <video
-            src={step.videoUrl}
-            controls
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
-        {step.imageUrl && !step.videoUrl && (
-          <img
-            src={step.imageUrl}
-            alt="Uploaded"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
-        {showCanvas && (
-          <div className="absolute inset-0 z-10">
+      {/* 이미지 공간 */}
+      <div className="relative w-full h-40 bg-gray-100 rounded-md border overflow-hidden">
+        {step.imageUrl ? (
+          <img src={step.imageUrl} alt="Generated" className="absolute inset-0 w-full h-full object-cover" />
+        ) : showCanvas ? (
+          <div className="absolute inset-0">
             <P5Canvas />
           </div>
-        )}
-        {!step.imageUrl && !step.videoUrl && !showCanvas && (
-          <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm bg-gray-100">
-            No media
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
+            No image
           </div>
         )}
       </div>
 
-      {/* 버튼 영역 */}
+      {/* 버튼 */}
       <div className="flex items-center justify-end gap-2">
         {(isEditing || isGenerating) && (
           <div className="text-xs text-gray-500 italic mr-auto">
             {isEditing ? '✏️ Editing...' : '🎨 Drawing...'}
           </div>
         )}
-        <MiniSquareButton onClick={handleAiEdit} disabled={isEditing || isGenerating}>
+
+        <button
+          onClick={handleAiEdit}
+          disabled={isEditing || isGenerating}
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
+        >
           ✏️
-        </MiniSquareButton>
-        <MiniSquareButton onClick={handleImageGenerate} disabled={isEditing || isGenerating}>
+        </button>
+
+        <button
+          onClick={handleImageGenerate}
+          disabled={isEditing || isGenerating}
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
+        >
           🖼️
-        </MiniSquareButton>
-        <label className="cursor-pointer">
-          <input type="file" accept="image/*,video/*" onChange={handleFileUpload} className="hidden" />
-          <MiniSquareButton>📁</MiniSquareButton>
+        </button>
+
+        <input
+          id={uploadId}
+          type="file"
+          accept="image/*,video/*"
+          onChange={handleFileUpload}
+          className="hidden"
+        />
+        <label
+          htmlFor={uploadId}
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center cursor-pointer"
+        >
+          📁
         </label>
-        <MiniSquareButton onClick={toggleCanvas}>
+
+        <button
+          onClick={() => setShowCanvas(!showCanvas)}
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center"
+        >
           🧑‍🎨
-        </MiniSquareButton>
+        </button>
       </div>
     </div>
   )
