@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Onboarding from './pages/Onboarding'
@@ -9,20 +9,26 @@ import Navbar from './components/Navbar'
 import StepBoard from './pages/StepBoard'
 import LoginModal from './components/LoginModal'
 import useAuth from './hooks/useAuth'
+import useStore from './store/useStore'
 
 export default function App() {
   const { user, loading } = useAuth()
   const location = useLocation()
   const hideNavbarOnPaths = ['/']
+  const setUserId = useStore((state) => state.setUserId)
 
-  if (loading) return null // or a loading spinner
+
+  useEffect(() => {
+    if (user) {
+      setUserId(user.uid)
+    }
+  }, [user, setUserId])
+
+  if (loading) return null
 
   return (
     <div>
-      {/* 로그인 안 됐으면 로그인 모달 */}
       {!user && <LoginModal />}
-
-      {/* 로그인 됐을 때만 페이지 보여주기 */}
       {user && (
         <>
           {!hideNavbarOnPaths.includes(location.pathname) && <Navbar />}
@@ -39,6 +45,7 @@ export default function App() {
     </div>
   )
 }
+
 
 
 

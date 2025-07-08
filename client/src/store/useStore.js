@@ -4,8 +4,10 @@ const useStore = create((set) => ({
   // 사용자/프로젝트 정보
   userId: '',
   projectId: '',
+  projectTitle: '',
   setUserId: (id) => set({ userId: id }),
   setProjectId: (id) => set({ projectId: id }),
+  setProjectTitle: (title) => set({ projectTitle: title }), 
 
   // Phase 관련 상태
   phases: [],
