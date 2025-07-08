@@ -15,13 +15,13 @@ export default function Storyboard() {
     setProjectId,
     userId,
     projectTitle,
-    setProjectTitle, // ✅ projectTitle setter 포함
+    setProjectTitle,
   } = useStore()
 
   const [showModal, setShowModal] = useState(false)
   const initializedRef = useRef(false)
+  const canvasRefs = useRef({})  // ✅ 캔버스 ref 저장용
 
-  // 최초 진입 시 모달 띄우기
   useEffect(() => {
     if (!projectId) {
       setShowModal(true)
@@ -31,11 +31,10 @@ export default function Storyboard() {
   const handleProjectNameSubmit = (name) => {
     const uniqueProjectId = `${userId || 'guest'}-${name}`
     setProjectId(uniqueProjectId)
-    setProjectTitle(name) // ✅ 프로젝트 타이틀 저장
+    setProjectTitle(name)
     setShowModal(false)
   }
 
-  // 초기 phase 추가
   useEffect(() => {
     if (!initializedRef.current && phases.length === 0 && projectId) {
       const initialPhase = {
@@ -66,22 +65,33 @@ export default function Storyboard() {
   const handleSave = async () => {
     try {
       const updatedPhases = await Promise.all(phases.map(async (phase) => {
-        if (phase.imageUrl?.startsWith('blob:')) {
-          const blob = await fetch(phase.imageUrl).then(res => res.blob())
-          const url = await uploadPhaseImageToStorage(blob, userId, projectId, phase.id)
-          return { ...phase, imageUrl: url }
+        let imageUrl = phase.imageUrl
+
+        if (imageUrl?.startsWith('blob:')) {
+          const blob = await fetch(imageUrl).then(res => res.blob())
+          imageUrl = await uploadPhaseImageToStorage(blob, userId, projectId, phase.id)
         }
-        return phase
+
+        // ✅ 캔버스 이미지 저장
+        if (!imageUrl && canvasRefs.current[phase.id]?.getCanvasBlob) {
+          const blob = await canvasRefs.current[phase.id].getCanvasBlob()
+          if (blob) {
+            imageUrl = await uploadPhaseImageToStorage(blob, userId, projectId, phase.id)
+          }
+        }
+
+        return { ...phase, imageUrl }
       }))
-  
+
       await savePhasesToFirestore(userId, projectId, projectTitle, updatedPhases)
+      setPhases(updatedPhases)
       alert('Phases saved successfully!')
     } catch (error) {
       console.error('Error saving phases:', error)
       alert('Failed to save phases.')
     }
   }
-  
+
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       {showModal && <ProjectNameModal onSubmit={handleProjectNameSubmit} />}
@@ -92,7 +102,11 @@ export default function Storyboard() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {phases.map((phase) => (
-          <PhaseCard key={phase.id} phase={phase} />
+          <PhaseCard
+            key={phase.id}
+            phase={phase}
+            canvasRef={(ref) => { canvasRefs.current[phase.id] = ref }}
+          />
         ))}
         <div className="flex flex-col gap-2">
           <SquareButton onClick={handleAddPhase}>+</SquareButton>
@@ -103,6 +117,7 @@ export default function Storyboard() {
     </div>
   )
 }
+
 
 
 

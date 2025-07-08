@@ -22,7 +22,7 @@ export default function StepCard({ step, onChange }) {
     setIsGenerating(true)
     const imageUrl = await fakeGenerateImage(step.description)
     onChange({ ...step, imageUrl })
-    setIsGenerating(false)
+    setIsGenerating(false) 
   }
 
   const handleFileUpload = (e) => {
@@ -30,8 +30,10 @@ export default function StepCard({ step, onChange }) {
     if (!file) return
     const url = URL.createObjectURL(file)
 
-    if (file.type.startsWith('image/')) {
-      onChange({ ...step, imageUrl: url })
+    if (file.type.startsWith('video/')) {
+      onChange({ ...step, videoUrl: url, imageUrl: '' })
+    } else if (file.type.startsWith('image/')) {
+      onChange({ ...step, imageUrl: url, videoUrl: '' })
     }
   }
 
@@ -99,7 +101,7 @@ export default function StepCard({ step, onChange }) {
         <input
           id={uploadId}
           type="file"
-          accept="image/*"
+          accept="image/*,video/*"
           onChange={handleFileUpload}
           className="hidden"
         />
@@ -120,7 +122,6 @@ export default function StepCard({ step, onChange }) {
     </div>
   )
 }
-
 
 
 

@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import useStore from '../store/useStore'
 import StepCard from '../components/StepCard'
 import SquareButton from '../components/SquareButton'
 import { uploadStepImageToStorage } from '../utils/uploadImageToStorage'
-import { saveStepsToFirestore } from '../utils/saveSteps' // 이건 Firestore 저장 유틸이 필요함
+import { saveStepsToFirestore } from '../utils/saveSteps'
 
 export default function StepBoard() {
   const { phaseId } = useParams()
@@ -20,11 +20,12 @@ export default function StepBoard() {
   } = useStore()
 
   const steps = stepsByPhase[phaseId] || []
+  const canvasRefs = useRef([])
 
-  // Step 초기화
+  // ✅ 초기 step에 id 부여
   useEffect(() => {
     if (!stepsByPhase[phaseId]) {
-      setSteps(phaseId, [{ description: '' }])
+      setSteps(phaseId, [{ id: Date.now(), description: '' }])
     }
   }, [phaseId, setSteps, stepsByPhase])
 
@@ -33,30 +34,37 @@ export default function StepBoard() {
   }
 
   const handleAddStep = () => {
-    addStep(phaseId, { description: '' })
+    addStep(phaseId, { id: Date.now(), description: '' })
   }
 
   const handleRemoveStep = () => {
     removeStep(phaseId)
   }
 
-  // ✅ 저장 로직 추가
   const handleSaveSteps = async () => {
     try {
       const updatedSteps = await Promise.all(
-        steps.map(async (step) => {
+        steps.map(async (step, i) => {
+          let imageUrl = step.imageUrl
+
           if (step.imageUrl?.startsWith('blob:')) {
             const blob = await fetch(step.imageUrl).then((res) => res.blob())
-            const url = await uploadStepImageToStorage(blob, userId, projectId, phaseId, step.id)
-            return { ...step, imageUrl: url }
+            imageUrl = await uploadStepImageToStorage(blob, userId, projectId, phaseId, step.id)
           }
-          return step
+
+          if (!imageUrl && canvasRefs.current[i]?.getCanvasBlob) {
+            const blob = await canvasRefs.current[i].getCanvasBlob()
+            if (blob) {
+              imageUrl = await uploadStepImageToStorage(blob, userId, projectId, phaseId, step.id)
+            }
+          }
+
+          return { ...step, imageUrl }
         })
       )
 
       setSteps(phaseId, updatedSteps)
       await saveStepsToFirestore(userId, projectId, phaseId, updatedSteps)
-
       alert('Steps saved successfully!')
     } catch (error) {
       console.error('Error saving steps:', error)
@@ -71,9 +79,10 @@ export default function StepBoard() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {steps.map((step, index) => (
           <StepCard
-            key={index}
+            key={step.id || index}
             step={step}
             onChange={(updated) => handleStepChange(updated, index)}
+            canvasRef={(el) => (canvasRefs.current[index] = el)}
           />
         ))}
 
@@ -86,6 +95,7 @@ export default function StepBoard() {
     </div>
   )
 }
+
 
 
 

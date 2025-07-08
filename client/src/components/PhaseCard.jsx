@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import useStore from '../store/useStore'
 import { Link } from 'react-router-dom'
 import P5Canvas from './P5Canvas'
@@ -9,6 +9,7 @@ export default function PhaseCard({ phase }) {
   const [imageLoading, setImageLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(phase.imageUrl || '')
   const [showCanvas, setShowCanvas] = useState(false)
+  const canvasRef = useRef(null)
 
   const handleChange = (field, value) => {
     const updated = phases.map((p) =>
@@ -36,6 +37,15 @@ export default function PhaseCard({ phase }) {
     const file = e.target.files[0]
     if (file && file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file)
+      setImageUrl(url)
+      handleChange('imageUrl', url)
+    }
+  }
+
+  const handleCanvasSave = async () => {
+    if (canvasRef.current?.getCanvasBlob) {
+      const blob = await canvasRef.current.getCanvasBlob()
+      const url = URL.createObjectURL(blob)
       setImageUrl(url)
       handleChange('imageUrl', url)
     }
@@ -81,7 +91,7 @@ export default function PhaseCard({ phase }) {
         )}
         {showCanvas && (
           <div className="absolute inset-0 z-10">
-            <P5Canvas />
+            <P5Canvas ref={canvasRef} />
           </div>
         )}
         {!imageUrl && !showCanvas && (
@@ -102,7 +112,7 @@ export default function PhaseCard({ phase }) {
         <button
           onClick={handleAiEdit}
           disabled={loading || imageLoading}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs"
         >
           ✏️
         </button>
@@ -110,7 +120,7 @@ export default function PhaseCard({ phase }) {
         <button
           onClick={handleAiImage}
           disabled={loading || imageLoading}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs"
         >
           🖼️
         </button>
@@ -124,20 +134,29 @@ export default function PhaseCard({ phase }) {
         />
         <label
           htmlFor={`upload-${phase.id}`}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center cursor-pointer"
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs cursor-pointer flex items-center justify-center"
         >
           📁
         </label>
 
         <button
           onClick={() => setShowCanvas(!showCanvas)}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center"
+          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs"
         >
           🧑‍🎨
         </button>
 
+        {showCanvas && (
+          <button
+            onClick={handleCanvasSave}
+            className="w-8 h-8 bg-green-100 border border-green-200 rounded-md shadow text-xs"
+          >
+            💾
+          </button>
+        )}
+
         <Link to={`/phase/${phase.id}/steps`}>
-          <button className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center">
+          <button className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs">
             📋
           </button>
         </Link>

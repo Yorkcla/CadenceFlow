@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useRef, useImperativeHandle, forwardRef } from 'react'
 import Sketch from 'react-p5'
 
-export default function P5Canvas({ width = 300, height = 180 }) {
+const P5Canvas = forwardRef(({ width = 300, height = 180 }, ref) => {
+  const canvasRef = useRef(null)
+
   const setup = (p5, canvasParentRef) => {
-    p5.createCanvas(width, height).parent(canvasParentRef)
-    p5.background(255) // 흰 배경
+    const canvas = p5.createCanvas(width, height).parent(canvasParentRef)
+    canvasRef.current = p5
+    p5.background(255)
   }
 
   const draw = (p5) => {
@@ -15,5 +18,20 @@ export default function P5Canvas({ width = 300, height = 180 }) {
     }
   }
 
+  // ✅ 외부에서 그림을 Blob으로 가져갈 수 있게 ref 메서드 정의
+  useImperativeHandle(ref, () => ({
+    async getCanvasBlob() {
+      if (!canvasRef.current) return null
+      return new Promise((resolve) => {
+        canvasRef.current.canvas.toBlob((blob) => {
+          resolve(blob)
+        })
+      })
+    }
+  }))
+
   return <Sketch setup={setup} draw={draw} />
-}
+})
+
+export default P5Canvas
+
