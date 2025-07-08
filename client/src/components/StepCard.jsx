@@ -1,10 +1,11 @@
-import React, { useId, useState } from 'react'
+import React, { useId, useRef, useState } from 'react'
 import P5Canvas from './P5Canvas'
 
 export default function StepCard({ step, onChange }) {
   const [isEditing, setIsEditing] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [showCanvas, setShowCanvas] = useState(false)
+  const canvasRef = useRef(null) // ✅ 캔버스 참조
   const uploadId = useId()
 
   const handleChange = (value) => {
@@ -22,7 +23,7 @@ export default function StepCard({ step, onChange }) {
     setIsGenerating(true)
     const imageUrl = await fakeGenerateImage(step.description)
     onChange({ ...step, imageUrl })
-    setIsGenerating(false) 
+    setIsGenerating(false)
   }
 
   const handleFileUpload = (e) => {
@@ -30,23 +31,17 @@ export default function StepCard({ step, onChange }) {
     if (!file) return
     const url = URL.createObjectURL(file)
 
-    if (file.type.startsWith('video/')) {
-      onChange({ ...step, videoUrl: url, imageUrl: '' })
-    } else if (file.type.startsWith('image/')) {
-      onChange({ ...step, imageUrl: url, videoUrl: '' })
+    if (file.type.startsWith('image/')) {
+      onChange({ ...step, imageUrl: url })
     }
   }
 
-  const fakeGeminiEdit = async (text) => {
-    return new Promise((res) =>
-      setTimeout(() => res(`[AI Revised] ${text}`), 1000)
-    )
-  }
-
-  const fakeGenerateImage = async (text) => {
-    return new Promise((res) =>
-      setTimeout(() => res('https://via.placeholder.com/200'), 1000)
-    )
+  const handleCanvasSave = async () => {
+    if (canvasRef.current?.getCanvasBlob) {
+      const blob = await canvasRef.current.getCanvasBlob()
+      const url = URL.createObjectURL(blob)
+      onChange({ ...step, imageUrl: url })
+    }
   }
 
   return (
@@ -65,7 +60,7 @@ export default function StepCard({ step, onChange }) {
           <img src={step.imageUrl} alt="Generated" className="absolute inset-0 w-full h-full object-cover" />
         ) : showCanvas ? (
           <div className="absolute inset-0">
-            <P5Canvas />
+            <P5Canvas ref={canvasRef} />
           </div>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
@@ -82,46 +77,34 @@ export default function StepCard({ step, onChange }) {
           </div>
         )}
 
-        <button
-          onClick={handleAiEdit}
-          disabled={isEditing || isGenerating}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
-        >
+        <button onClick={handleAiEdit} disabled={isEditing || isGenerating} className="w-8 h-8 bg-blue-100 border rounded-md shadow text-xs">
           ✏️
         </button>
 
-        <button
-          onClick={handleImageGenerate}
-          disabled={isEditing || isGenerating}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
-        >
+        <button onClick={handleImageGenerate} disabled={isEditing || isGenerating} className="w-8 h-8 bg-blue-100 border rounded-md shadow text-xs">
           🖼️
         </button>
 
-        <input
-          id={uploadId}
-          type="file"
-          accept="image/*,video/*"
-          onChange={handleFileUpload}
-          className="hidden"
-        />
-        <label
-          htmlFor={uploadId}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center cursor-pointer"
-        >
+        <input id={uploadId} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+        <label htmlFor={uploadId} className="w-8 h-8 bg-blue-100 border rounded-md shadow text-xs cursor-pointer flex items-center justify-center">
           📁
         </label>
 
-        <button
-          onClick={() => setShowCanvas(!showCanvas)}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center"
-        >
+        <button onClick={() => setShowCanvas(!showCanvas)} className="w-8 h-8 bg-blue-100 border rounded-md shadow text-xs">
           🧑‍🎨
         </button>
+
+        {/* ✅ 그림 저장 버튼 */}
+        {showCanvas && (
+          <button onClick={handleCanvasSave} className="w-8 h-8 bg-green-100 border rounded-md shadow text-xs">
+            💾
+          </button>
+        )}
       </div>
     </div>
   )
 }
+
 
 
 
