@@ -100,7 +100,7 @@ export default function Storyboard() {
       {showProjectModal && <ProjectNameModal onSubmit={handleProjectNameSubmit} />}
 
       <h2 className="text-2xl font-bold">
-        Storyboarding <span className="text-sm text-green-500">{projectTitle}</span>
+        Storyboarding
       </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">

@@ -13,19 +13,19 @@ export default function ProjectNameModal({ onSubmit }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-80 space-y-4 shadow-lg">
-        <h2 className="text-lg font-bold">🎬 새 프로젝트 시작</h2>
+        <h2 className="text-lg font-bold">New Project</h2>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="프로젝트 이름을 입력하세요"
+          placeholder="Project Title"
           className="w-full border rounded px-3 py-2 text-sm"
         />
         <button
           onClick={handleSubmit}
           className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded text-sm font-semibold"
         >
-          시작하기
+          Start
         </button>
       </div>
     </div>

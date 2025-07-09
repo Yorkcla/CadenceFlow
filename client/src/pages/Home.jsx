@@ -7,6 +7,7 @@ import useAuth from '../hooks/useAuth'
 export default function Home() {
   const { userId, setUserId } = useStore()
   const { logout } = useAuth()
+  const projectTitle = useStore((state) => state.projectTitle)
 
   const sections = [
     { title: 'Onboarding', path: '/onboarding' },
@@ -18,13 +19,18 @@ export default function Home() {
   return (
     <div className="min-h-screen px-6 py-10 flex flex-col items-center">
       
-      <button
-        onClick={logout}
-        className="absolute top-6 right-6 px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"
-      >
-      👋
-      </button>
-      
+      <div className="flex justify-end items-center w-full pr-6 gap-2">
+        <span className="text-sm text-gray-700 italic">{projectTitle}</span>
+        <div className="flex items-center gap-2 bg-sky-100 px-1 py-1 rounded-lg">
+          <button
+            onClick={logout}
+            className="px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"
+          >
+          👋
+          </button>
+        </div>
+      </div>
+
       <div className="w-full max-w-md mb-8 text-center">
         <h1 className="text-2xl font-bold text-gray-800">CadenceFlow</h1>
       </div>
