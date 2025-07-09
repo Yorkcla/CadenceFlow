@@ -6,6 +6,7 @@ import SquareButton from '../components/SquareButton'
 import ProjectNameModal from '../components/ProjectNameModal'
 import { savePhasesToFirestore } from '../utils/savePhases'
 import { uploadPhaseImageToStorage } from '../utils/uploadImageToStorage'
+import { cleanRemovedPhases } from '../utils/cleanupPhases'
 import toast from 'react-hot-toast'
 
 export default function Storyboard() {
@@ -87,6 +88,7 @@ export default function Storyboard() {
       }))
 
       await savePhasesToFirestore(userId, projectId, projectTitle, updatedPhases)
+      await cleanRemovedPhases(userId, projectId, updatedPhases)
       setPhases(updatedPhases)
       toast.success('Phases Saved')
     } catch (error) {
@@ -98,10 +100,6 @@ export default function Storyboard() {
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       {showProjectModal && <ProjectNameModal onSubmit={handleProjectNameSubmit} />}
-
-      <h2 className="text-2xl font-bold">
-        Storyboarding
-      </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {phases.map((phase) => (

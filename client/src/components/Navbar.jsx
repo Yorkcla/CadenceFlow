@@ -56,7 +56,7 @@ export default function Navbar() {
             onClick={() => setShowProjectModal(true)}
             className="px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"
           >
-            🎬
+            ➕
           </button>
           <button
             onClick={logout}

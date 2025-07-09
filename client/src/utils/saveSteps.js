@@ -9,9 +9,12 @@ export const saveStepsToFirestore = async (userId, projectId, phaseId, steps) =>
 
   try {
     const ref = doc(db, 'users', userId, 'projects', projectId, 'phases', phaseId)
-    await setDoc(ref, { steps: steps }, { merge: true })
+    
+    await setDoc(ref, { steps: steps })
+
     console.log('Steps saved successfully')
   } catch (error) {
     console.error('Error saving steps to Firestore:', error)
   }
 }
+
