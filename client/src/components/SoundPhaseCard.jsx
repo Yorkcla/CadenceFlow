@@ -3,7 +3,7 @@ import MiniSquareButton from './MiniSquareButton'
 
 export default function SoundPhaseCard({ phase, selected, onSelect }) {
   return (
-    <div className={`border rounded-xl p-4 shadow space-y-3 w-64 flex-shrink-0 ${selected ? 'bg-yellow-100' : 'bg-white'}`}>
+    <div className={`border rounded-xl p-4 shadow space-y-3 w-64 flex-shrink-0 ${selected ? 'bg-sky-100' : 'bg-white'}`}>
       <h3 className="text-lg font-semibold border-b border-gray-300 pb-1">{phase.title}</h3>
       <p className="text-sm text-gray-700">{phase.description}</p>
 
@@ -16,8 +16,7 @@ export default function SoundPhaseCard({ phase, selected, onSelect }) {
           </div>
         )}
       </div>
-
-      <div className="text-right">
+      <div className="text-right flex items-center justify-end gap-2">
         <MiniSquareButton onClick={onSelect}>✔️</MiniSquareButton>
       </div>
     </div>

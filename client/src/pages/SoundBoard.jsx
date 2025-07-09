@@ -1,4 +1,3 @@
-// src/pages/Soundboard.jsx
 import React, { useEffect, useState } from 'react'
 import useStore from '../store/useStore'
 import { doc, getDoc } from 'firebase/firestore'
@@ -53,9 +52,8 @@ export default function Soundboard() {
   }
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-4">Assign Sounds</h2>
-      <div className="flex overflow-x-auto gap-4 items-start">
+    <div className="w-screen h-[calc(100vh-80px)] overflow-x-auto overflow-y-hidden">
+      <div className="flex gap-10 items-start min-w-fit p-10">
         {phases.map(phase => (
           <React.Fragment key={phase.id}>
             {/* Phase 카드 */}
