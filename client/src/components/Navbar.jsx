@@ -1,9 +1,11 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
+import useStore from '../store/useStore'
 
 export default function Navbar() {
   const { logout } = useAuth()
+  const setShowProjectModal = useStore((state) => state.setShowProjectModal)
 
   return (
     <nav className="bg-white text-gray-900 px-6 py-4 shadow border-b flex justify-between items-center">
@@ -44,13 +46,24 @@ export default function Navbar() {
           Reviewing
         </NavLink>
       </div>
-      <button
-        onClick={logout}
-        className="px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"
-      >
-      👋
-      </button>
+
+      {/* 버튼 묶음 */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setShowProjectModal(true)}
+          className="px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"
+        >
+          ➕
+        </button>
+        <button
+          onClick={logout}
+          className="px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"
+        >
+          👋
+        </button>
+      </div>
     </nav>
   )
 }
+
 

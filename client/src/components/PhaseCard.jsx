@@ -49,7 +49,7 @@ export default function PhaseCard({ phase }) {
       const url = URL.createObjectURL(blob)
       setImageUrl(url)
       handleChange('imageUrl', url)
-      toast.success('Canvas saved!') // ✅ 알림 추가
+      toast.success('Canvas Saved') // ✅ 알림 추가
     }
   }
 

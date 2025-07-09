@@ -5,6 +5,7 @@ import StepCard from '../components/StepCard'
 import SquareButton from '../components/SquareButton'
 import { uploadStepImageToStorage } from '../utils/uploadImageToStorage'
 import { saveStepsToFirestore } from '../utils/saveSteps'
+import toast from 'react-hot-toast'
 
 export default function StepBoard() {
   const { phaseId } = useParams()
@@ -67,10 +68,10 @@ export default function StepBoard() {
 
       setSteps(phaseId, updatedSteps)
       await saveStepsToFirestore(userId, projectId, phaseId, updatedSteps)
-      alert('Steps saved successfully!')
+      toast.success('Steps Saved')
     } catch (error) {
       console.error('Error saving steps:', error)
-      alert('Failed to save steps.')
+      toast.error('Failed to Save')
     }
   }
 
@@ -89,7 +90,7 @@ export default function StepBoard() {
         ))}
 
         <div className="flex flex-col gap-2">
-          <SquareButton onClick={handleAddStep}>+</SquareButton>
+          <SquareButton onClick={handleAddStep}>➕</SquareButton>
           <SquareButton onClick={handleRemoveStep}>❌</SquareButton>
           <SquareButton onClick={handleSaveSteps}>💾</SquareButton>
         </div>

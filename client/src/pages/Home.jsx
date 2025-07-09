@@ -2,9 +2,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import useStore from '../store/useStore'
+import useAuth from '../hooks/useAuth'
 
 export default function Home() {
   const { userId, setUserId } = useStore()
+  const { logout } = useAuth()
 
   const sections = [
     { title: 'Onboarding', path: '/onboarding' },
@@ -15,6 +17,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen px-6 py-10 flex flex-col items-center">
+      
+      <button
+        onClick={logout}
+        className="absolute top-6 right-6 px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"
+      >
+      👋
+      </button>
+      
       <div className="w-full max-w-md mb-8 text-center">
         <h1 className="text-2xl font-bold text-gray-800">CadenceFlow</h1>
       </div>

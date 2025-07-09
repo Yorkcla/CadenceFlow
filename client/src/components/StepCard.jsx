@@ -2,10 +2,11 @@ import React, { useRef, useState } from 'react'
 import P5Canvas from './P5Canvas'
 import toast from 'react-hot-toast'
 
-export default function StepCard({ step, onChange, canvasRef }) {
+export default function StepCard({ step, onChange }) {
   const [isEditing, setIsEditing] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [showCanvas, setShowCanvas] = useState(false)
+  const localCanvasRef = useRef(null)
 
   const handleChange = (field, value) => {
     onChange({ ...step, [field]: value })
@@ -34,12 +35,12 @@ export default function StepCard({ step, onChange, canvasRef }) {
   }
 
   const handleCanvasSave = async () => {
-    if (canvasRef.current?.getCanvasBlob) {
-      const blob = await canvasRef.current.getCanvasBlob()
+    if (localCanvasRef.current?.getCanvasBlob) {
+      const blob = await localCanvasRef.current.getCanvasBlob()
       const url = URL.createObjectURL(blob)
       handleChange('imageUrl', url)
       setShowCanvas(false)
-      toast.success('Canvas saved!') // ✅ 알림 추가
+      toast.success('Canvas Saved')
     }
   }
 
@@ -66,7 +67,7 @@ export default function StepCard({ step, onChange, canvasRef }) {
           <img src={step.imageUrl} alt="Step" className="absolute inset-0 w-full h-full object-cover" />
         ) : showCanvas ? (
           <div className="absolute inset-0 z-10">
-            <P5Canvas ref={canvasRef} />
+            <P5Canvas ref={localCanvasRef} />
           </div>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
@@ -97,6 +98,7 @@ export default function StepCard({ step, onChange, canvasRef }) {
     </div>
   )
 }
+
 
 
 

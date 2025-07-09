@@ -7,7 +7,11 @@ const useStore = create((set) => ({
   projectTitle: '',
   setUserId: (id) => set({ userId: id }),
   setProjectId: (id) => set({ projectId: id }),
-  setProjectTitle: (title) => set({ projectTitle: title }), 
+  setProjectTitle: (title) => set({ projectTitle: title }),
+
+  // 🔽 프로젝트 이름 변경 모달 상태 추가
+  showProjectModal: false,
+  setShowProjectModal: (value) => set({ showProjectModal: value }),
 
   // Phase 관련 상태
   phases: [],
@@ -63,4 +67,5 @@ const useStore = create((set) => ({
 }))
 
 export default useStore
+
 

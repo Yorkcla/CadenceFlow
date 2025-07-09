@@ -1,10 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react'
+// src/pages/Storyboard.jsx
+import React, { useEffect, useRef } from 'react'
 import useStore from '../store/useStore'
 import PhaseCard from '../components/PhaseCard'
 import SquareButton from '../components/SquareButton'
 import ProjectNameModal from '../components/ProjectNameModal'
 import { savePhasesToFirestore } from '../utils/savePhases'
 import { uploadPhaseImageToStorage } from '../utils/uploadImageToStorage'
+import toast from 'react-hot-toast'
 
 export default function Storyboard() {
   const {
@@ -16,23 +18,25 @@ export default function Storyboard() {
     userId,
     projectTitle,
     setProjectTitle,
+    showProjectModal,
+    setShowProjectModal,
   } = useStore()
 
-  const [showModal, setShowModal] = useState(false)
   const initializedRef = useRef(false)
   const canvasRefs = useRef({})  // ✅ 캔버스 ref 저장용
 
+  // 처음 진입 시 모달 자동 열기
   useEffect(() => {
     if (!projectId) {
-      setShowModal(true)
+      setShowProjectModal(true)
     }
-  }, [projectId])
+  }, [projectId, setShowProjectModal])
 
   const handleProjectNameSubmit = (name) => {
     const uniqueProjectId = `${userId || 'guest'}-${name}`
     setProjectId(uniqueProjectId)
     setProjectTitle(name)
-    setShowModal(false)
+    setShowProjectModal(false)
   }
 
   useEffect(() => {
@@ -72,7 +76,6 @@ export default function Storyboard() {
           imageUrl = await uploadPhaseImageToStorage(blob, userId, projectId, phase.id)
         }
 
-        // ✅ 캔버스 이미지 저장
         if (!imageUrl && canvasRefs.current[phase.id]?.getCanvasBlob) {
           const blob = await canvasRefs.current[phase.id].getCanvasBlob()
           if (blob) {
@@ -85,16 +88,16 @@ export default function Storyboard() {
 
       await savePhasesToFirestore(userId, projectId, projectTitle, updatedPhases)
       setPhases(updatedPhases)
-      alert('Phases saved successfully!')
+      toast.success('Phases Saved')
     } catch (error) {
       console.error('Error saving phases:', error)
-      alert('Failed to save phases.')
+      toast.error('Failed to Save')
     }
   }
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
-      {showModal && <ProjectNameModal onSubmit={handleProjectNameSubmit} />}
+      {showProjectModal && <ProjectNameModal onSubmit={handleProjectNameSubmit} />}
 
       <h2 className="text-2xl font-bold">
         Storyboarding <span className="text-sm text-green-500">{projectTitle}</span>
@@ -109,7 +112,7 @@ export default function Storyboard() {
           />
         ))}
         <div className="flex flex-col gap-2">
-          <SquareButton onClick={handleAddPhase}>+</SquareButton>
+          <SquareButton onClick={handleAddPhase}>➕</SquareButton>
           <SquareButton onClick={handleRemoveLastPhase}>❌</SquareButton>
           <SquareButton onClick={handleSave}>💾</SquareButton>
         </div>
@@ -117,6 +120,7 @@ export default function Storyboard() {
     </div>
   )
 }
+
 
 
 
