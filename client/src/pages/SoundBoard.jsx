@@ -13,7 +13,6 @@ export default function Soundboard() {
   const [selected, setSelected] = useState({})
   const [soundConfig, setSoundConfig] = useState({})
 
-  // Fetch phases
   useEffect(() => {
     const fetchPhases = async () => {
       if (!userId || !projectId) return
@@ -26,7 +25,6 @@ export default function Soundboard() {
     fetchPhases()
   }, [userId, projectId])
 
-  // Fetch steps by phase
   useEffect(() => {
     const fetchSteps = async () => {
       if (!userId || !projectId || phases.length === 0) return
@@ -41,7 +39,6 @@ export default function Soundboard() {
     fetchSteps()
   }, [userId, projectId, phases])
 
-  // Toggle card selection
   const toggleSelect = (type, id) => {
     const key = `${type}-${id}`
     setSelected(prev => ({
@@ -50,7 +47,6 @@ export default function Soundboard() {
     }))
   }
 
-  // Update sound config params
   const onUpdateSoundConfig = (id, key, value) => {
     setSoundConfig(prev => ({
       ...prev,
@@ -66,7 +62,6 @@ export default function Soundboard() {
       <div className="flex gap-10 items-start min-w-fit p-10">
         {phases.map(phase => (
           <React.Fragment key={phase.id}>
-            {/* Phase Card */}
             <div>
               <SoundPhaseCard
                 phase={phase}
@@ -80,11 +75,14 @@ export default function Soundboard() {
                   id={phase.id}
                   config={soundConfig[phase.id] || {}}
                   onUpdate={onUpdateSoundConfig}
+                  userId={userId}
+                  projectId={projectId}
+                  phaseId={phase.id}
+                  isSampleOnly={soundConfig[phase.id]?.instrument === 'Sample'}
                 />
               )}
             </div>
 
-            {/* Step Cards under Phase */}
             {(stepsByPhase[phase.id] || []).map(step => (
               <div key={step.id}>
                 <SoundStepCard
@@ -99,6 +97,11 @@ export default function Soundboard() {
                     id={step.id}
                     config={soundConfig[step.id] || {}}
                     onUpdate={onUpdateSoundConfig}
+                    userId={userId}
+                    projectId={projectId}
+                    phaseId={phase.id}
+                    stepId={step.id}
+                    isSampleOnly={soundConfig[step.id]?.instrument === 'Sample'}
                   />
                 )}
               </div>
