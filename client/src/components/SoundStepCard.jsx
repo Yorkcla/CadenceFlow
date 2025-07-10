@@ -1,7 +1,7 @@
 import React from 'react'
 import MiniSquareButton from './MiniSquareButton'
 
-export default function SoundStepCard({ step, selected, onSelect, soundConfig = {}, onUpdateSoundConfig }) {
+export default function SoundStepCard({ step, selected, onSelect, soundParams = {}, onUpdateSoundConfig }) {
   return (
     <div className={`border rounded-xl p-4 shadow space-y-3 w-64 flex-shrink-0 ${selected ? 'bg-sky-100' : 'bg-white'}`}>
       <p className="text-sm font-medium border-b border-gray-300 pb-1">{step.description}</p>
@@ -19,7 +19,7 @@ export default function SoundStepCard({ step, selected, onSelect, soundConfig = 
       {selected && (
         <div className="flex flex-col gap-2 pt-2">
           <select
-            value={soundConfig.cognitivePhase || ''}
+            value={soundParams.cognitivePhase || ''}
             onChange={e => onUpdateSoundConfig(step.id, 'cognitivePhase', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
@@ -32,7 +32,7 @@ export default function SoundStepCard({ step, selected, onSelect, soundConfig = 
           </select>
 
           <select
-            value={soundConfig.interactionIntent || ''}
+            value={soundParams.interactionIntent || ''}
             onChange={e => onUpdateSoundConfig(step.id, 'interactionIntent', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
@@ -42,6 +42,17 @@ export default function SoundStepCard({ step, selected, onSelect, soundConfig = 
             <option value="welcome">Welcome</option>
             <option value="error">Error</option>
             <option value="notification">Notification</option>
+          </select>
+
+          <select
+            value={soundParams.urgency || ''}
+            onChange={e => onUpdateSoundConfig(step.id, 'urgency', e.target.value)}
+            className="border rounded px-2 py-1 text-sm"
+          >
+            <option value="">Level of Urgency</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
           </select>
         </div>
       )}

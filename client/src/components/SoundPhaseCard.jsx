@@ -44,6 +44,17 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
             <option value="error">Error</option>
             <option value="notification">Notification</option>
           </select>
+
+          <select
+            value={soundConfig.urgency || ''}
+            onChange={e => onUpdateSoundConfig(phase.id, 'urgency', e.target.value)}
+            className="border rounded px-2 py-1 text-sm"
+          >
+            <option value="">Level of Urgency</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
         </div>
       )}
 
