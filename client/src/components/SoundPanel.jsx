@@ -11,35 +11,38 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
     const sampleUrl = config.sampleUrl || ''
     const instrument = config.instrument || 'Synth'
 
-    const chain = []
+    // ✅ 올바른 이펙트 체인 구성 (순서대로 흐름)
+    const effectsChain = []
 
     if (effects.reverb) {
-      const reverb = new Tone.Reverb({ decay: 2, wet: 0.3 })
+      const reverb = new Tone.Reverb({ decay: 4, wet: 0.6 })
       await reverb.generate()
-      chain.push(reverb)
+      effectsChain.push(reverb)
     }
 
     if (effects.delay) {
-      const delay = new Tone.FeedbackDelay('8n', 0.25)
-      chain.push(delay)
+      const delay = new Tone.FeedbackDelay('8n', 0.3)
+      effectsChain.push(delay)
     }
 
     if (effects.distortion) {
       const distortion = new Tone.Distortion(0.4)
-      chain.push(distortion)
+      effectsChain.push(distortion)
     }
 
-    const destination = chain.reduce((acc, effect) => {
-      acc.connect(effect)
-      return effect
-    }, Tone.Destination)
+    // ✅ 체인을 Destination까지 연결 (뒤에서부터)
+    let finalNode = Tone.Destination
+    for (let i = effectsChain.length - 1; i >= 0; i--) {
+      effectsChain[i].connect(finalNode)
+      finalNode = effectsChain[i]
+    }
 
     if (instrument === 'Sample' && sampleUrl) {
       const player = new Tone.Player({
         url: sampleUrl,
         volume,
-        autostart: true, // ⭐ 여기가 핵심
-      }).connect(destination)
+        autostart: true,
+      }).connect(finalNode)
       return
     }
 
@@ -53,7 +56,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
       MetalSynth: Tone.MetalSynth,
     }
     const SynthClass = SynthMap[instrument] || Tone.Synth
-    const synth = new Tone.PolySynth(SynthClass).connect(destination)
+    const synth = new Tone.PolySynth(SynthClass).connect(finalNode)
     synth.volume.value = volume
 
     const pitchArray = config.pitch || []
@@ -180,6 +183,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
     </div>
   )
 }
+
 
 
 
