@@ -96,7 +96,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
       <p className="text-sm font-semibold text-gray-800">Sound for {id}</p>
 
       <div>
-        <label className="text-xs text-gray-500">Instrument</label>
+        <label className="text-xs text-gray-500">Timbre</label>
         <select
           className="border rounded p-1 w-full text-sm"
           value={config.instrument || 'Synth'}

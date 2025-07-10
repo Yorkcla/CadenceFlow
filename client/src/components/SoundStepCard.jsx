@@ -23,12 +23,13 @@ export default function SoundStepCard({ step, selected, onSelect, soundParams = 
             onChange={e => onUpdateSoundConfig(step.id, 'cognitivePhase', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
-            <option value="">Cognitive Phase</option>
+            <option value="">Emotional Flow</option>
             <option value="start">Start</option>
-            <option value="rising">Rising</option>
+            <option value="rising">Build</option>
             <option value="peak">Peak</option>
-            <option value="falling">Falling</option>
+            <option value="falling">Ease</option>
             <option value="end">End</option>
+            <option value="end">Attention</option>
           </select>
 
           <select
@@ -37,11 +38,11 @@ export default function SoundStepCard({ step, selected, onSelect, soundParams = 
             className="border rounded px-2 py-1 text-sm"
           >
             <option value="">Interaction Intent</option>
-            <option value="warning">Warning</option>
-            <option value="confirmation">Confirmation</option>
-            <option value="welcome">Welcome</option>
-            <option value="error">Error</option>
-            <option value="notification">Notification</option>
+            <option value="warning">Alert</option>
+            <option value="confirmation">Notification</option>
+            <option value="welcome">Confirmation</option>
+            <option value="error">Guidance</option>
+            <option value="notification">Expression</option>
           </select>
 
           <select
@@ -49,7 +50,7 @@ export default function SoundStepCard({ step, selected, onSelect, soundParams = 
             onChange={e => onUpdateSoundConfig(step.id, 'urgency', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
-            <option value="">Level of Urgency</option>
+            <option value="">Importance</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
