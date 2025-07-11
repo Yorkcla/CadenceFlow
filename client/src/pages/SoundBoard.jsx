@@ -85,7 +85,7 @@ export default function Soundboard() {
       return
     }
 
-    toast.loading('Saving sounds…')
+    const toastId = toast.loading('Saving sounds…')
 
     try {
       await deleteAllFinalAssets(userId, projectId)
@@ -126,12 +126,12 @@ export default function Soundboard() {
       }
 
       await Tone.context.resume()
-      toast.success('Sounds saved successfully!')
+      toast.success('Sounds Saved')
     } catch (err) {
       console.error('Error saving sounds:', err)
-      toast.error('Failed to save sounds')
+      toast.error('Failed to Save')
     } finally {
-      toast.dismiss()
+      toast.dismiss(toastId)
     }
   }
 
