@@ -5,6 +5,13 @@ import { db } from '../utils/firebase'
 import SoundPhaseCard from '../components/SoundPhaseCard'
 import SoundStepCard from '../components/SoundStepCard'
 import SoundPanel from '../components/SoundPanel'
+import SquareButton from '../components/SquareButton'
+import { renderToneToWav } from '../utils/renderToneToWav'
+import { uploadSoundBlob } from '../utils/uploadSoundBlob'
+import { saveSoundConfig } from '../utils/saveSoundConfig'
+import { saveFinalAsset } from '../utils/saveFinalAsset' // ✅ 추가
+import toast from 'react-hot-toast'
+import * as Tone from 'tone'
 
 export default function Soundboard() {
   const { userId, projectId } = useStore()
@@ -57,6 +64,61 @@ export default function Soundboard() {
     }))
   }
 
+  const handleSaveSounds = async () => {
+    const selectedKeys = Object.keys(selected).filter(k => selected[k])
+    if (selectedKeys.length === 0) {
+      toast.error('No cards selected')
+      return
+    }
+
+    toast.loading('Saving sounds...')
+
+    try {
+      for (const key of selectedKeys) {
+        const [type, id] = key.split('-')
+        const config = soundConfig[id]
+        if (!config) continue
+
+        const isPhase = type === 'phase'
+        const phase = isPhase
+          ? phases.find(p => String(p.id) === id)
+          : phases.find(p => (stepsByPhase[p.id] || []).some(s => String(s.id) === id))
+        const step = isPhase
+          ? null
+          : (stepsByPhase[phase?.id] || []).find(s => String(s.id) === id)
+
+        const phaseId = phase?.id
+        const stepId = step?.id
+
+        const blob = await renderToneToWav(config)
+        const soundUrl = await uploadSoundBlob(userId, projectId, phaseId, stepId, blob)
+
+        // 1️⃣ 원본 phase/step 문서에 사운드 설정 저장
+        await saveSoundConfig(userId, projectId, phaseId, stepId, config, soundUrl)
+
+        // 2️⃣ finalAssets 컬렉션에 최종 결과 저장
+        await saveFinalAsset(userId, projectId, {
+          type,
+          id,
+          phaseId,
+          title: phase?.title || '',
+          description: step?.description || phase?.description || '',
+          imageUrl: step?.imageUrl || phase?.imageUrl || '',
+          soundConfig: config,
+          soundUrl
+        })
+      }
+
+      await Tone.context.resume() 
+      toast.success('Sounds saved successfully!')
+    } catch (err) {
+      console.error('Error saving sounds:', err)
+      toast.error('Failed to save sounds')
+    } finally {
+      toast.dismiss()
+    }
+  }
+
   return (
     <div className="w-screen h-[calc(100vh-80px)] overflow-x-auto overflow-y-auto px-10 pb-40">
       <div className="flex gap-10 items-start min-w-fit p-10">
@@ -82,7 +144,7 @@ export default function Soundboard() {
                 />
               )}
             </div>
-
+  
             {(stepsByPhase[phase.id] || []).map(step => (
               <div key={step.id}>
                 <SoundStepCard
@@ -108,10 +170,17 @@ export default function Soundboard() {
             ))}
           </React.Fragment>
         ))}
+  
+        {/* 💾 저장 버튼 - 카드처럼 끝에 붙임 */}
+        <div className="flex flex-col gap-2">
+          <SquareButton onClick={handleSaveSounds}>💾 Save</SquareButton>
+        </div>
       </div>
     </div>
-  )
+  )  
 }
+
+
 
 
 

@@ -6,12 +6,13 @@ import { uploadSample } from '../utils/uploadSample'
 export default function SoundPanel({ id, config = {}, onUpdate, userId, projectId, phaseId, stepId }) {
   const handlePlay = async () => {
     await Tone.start()
+
     const volume = parseFloat(config.volume) || -6
     const effects = config.effects || {}
     const sampleUrl = config.sampleUrl || ''
     const instrument = config.instrument || 'Synth'
 
-    // ✅ 올바른 이펙트 체인 구성 (순서대로 흐름)
+    // ✅ 이펙트 체인 새로 생성 (항상 fresh하게)
     const effectsChain = []
 
     if (effects.reverb) {
@@ -30,7 +31,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
       effectsChain.push(distortion)
     }
 
-    // ✅ 체인을 Destination까지 연결 (뒤에서부터)
+    // ✅ 항상 라이브 컨텍스트에 연결
     let finalNode = Tone.Destination
     for (let i = effectsChain.length - 1; i >= 0; i--) {
       effectsChain[i].connect(finalNode)
@@ -55,6 +56,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
       MonoSynth: Tone.MonoSynth,
       MetalSynth: Tone.MetalSynth,
     }
+
     const SynthClass = SynthMap[instrument] || Tone.Synth
     const synth = new Tone.PolySynth(SynthClass).connect(finalNode)
     synth.volume.value = volume
@@ -82,9 +84,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
     const file = e.target.files[0]
     if (!file || !userId || !projectId || !phaseId) return
     try {
-      console.log('Uploading sample:', file.name)
       const fileUrl = await uploadSample(userId, projectId, phaseId, stepId, file)
-      console.log('Uploaded sample URL:', fileUrl)
       onUpdate(id, 'sampleUrl', fileUrl)
     } catch (err) {
       console.error('Sample upload failed:', err)
@@ -183,6 +183,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
     </div>
   )
 }
+
 
 
 
