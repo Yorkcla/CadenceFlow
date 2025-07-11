@@ -48,7 +48,7 @@ export default function ReviewCard({ asset }) {
 
       <div className="text-right flex items-center justify-end gap-2">
         <MiniSquareButton onClick={handleToggleAudio}>
-          🔊
+        {isPlaying ? '⏸️' : '🔊'}
         </MiniSquareButton>
         <audio ref={audioRef} src={asset.soundUrl} preload="auto" />
       </div>

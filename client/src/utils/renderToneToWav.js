@@ -55,7 +55,7 @@ export async function renderToneToWav(config) {
       const durSec    = Tone.Time(duration[i] ?? '1').toSeconds()
       max = Math.max(max, offsetSec + durSec)
     }
-    return max + 2                  // tail 여유
+    return max + 1                  // tail 여유
   })()
 
   const SynthMap = {
