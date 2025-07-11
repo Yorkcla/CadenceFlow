@@ -5,11 +5,11 @@ import * as Tone from 'tone'
 // -----------------------------
 function audioBufferToWavBlob(buffer) {
   const numOfChan = buffer.numberOfChannels
-  const length = buffer.length * numOfChan * 2 + 44
-  const view   = new DataView(new ArrayBuffer(length))
-  let offset   = 0
+  const length    = buffer.length * numOfChan * 2 + 44
+  const view      = new DataView(new ArrayBuffer(length))
+  let offset      = 0
 
-  const u8 = v => view.setUint8(offset++, v)
+  const u8  = v => view.setUint8(offset++, v)
   const u16 = v => (view.setUint16(offset, v, true), offset += 2)
   const u32 = v => (view.setUint32(offset, v, true), offset += 4)
   const str = s => [...s].forEach(c => u8(c.charCodeAt(0)))
@@ -32,6 +32,10 @@ function audioBufferToWavBlob(buffer) {
 // 메인 렌더링 함수
 // -----------------------------
 export async function renderToneToWav(config) {
+  // ✅ 컨텍스트가 일시중지 상태일 때 재개
+  await Tone.start()
+  await Tone.context.resume()
+
   const {
     instrument = 'Synth',
     volume = -6,
@@ -42,16 +46,16 @@ export async function renderToneToWav(config) {
     sampleUrl
   } = config
 
-  // ▶️ 자동 총 길이 계산 (여유 1초 추가)
+  // ▶️ 자동 총 길이 계산 (Tone.Time 사용, 여유 2초)
   const totalDuration = (() => {
-    if (!pitch.length) return 2
+    if (!pitch.length) return 3     // 최소 3초
     let max = 0
     for (let i = 0; i < pitch.length; i++) {
-      const offset = parseFloat(rhythm[i])   || 0
-      const dur    = parseFloat(duration[i]) || 1
-      max = Math.max(max, offset + dur)
+      const offsetSec = Tone.Time(rhythm[i] ?? 0).toSeconds()
+      const durSec    = Tone.Time(duration[i] ?? '1').toSeconds()
+      max = Math.max(max, offsetSec + durSec)
     }
-    return max + 1
+    return max + 2                  // tail 여유
   })()
 
   const SynthMap = {
@@ -65,7 +69,9 @@ export async function renderToneToWav(config) {
   }
 
   const buffer = await Tone.Offline(async ({ transport, context }) => {
-    let finalNode = context.destination
+    // ✅ context가 undefined일 때 안전 fallback
+    const destination = context?.destination || Tone.getContext().rawContext.destination
+    let finalNode = destination
     const chain = []
 
     if (effects.reverb) {
@@ -76,15 +82,17 @@ export async function renderToneToWav(config) {
     if (effects.delay)      chain.push(new Tone.FeedbackDelay('8n', 0.3))
     if (effects.distortion) chain.push(new Tone.Distortion(0.4))
 
-    // 체인 연결 (뒤에서 앞으로)
     for (let i = chain.length - 1; i >= 0; i--) {
       chain[i].connect(finalNode)
       finalNode = chain[i]
     }
 
     if (instrument === 'Sample' && sampleUrl) {
-      new Tone.Player({ url: sampleUrl, volume: parseFloat(volume), autostart: true })
-        .connect(finalNode)
+      new Tone.Player({
+        url: sampleUrl,
+        volume: parseFloat(volume),
+        autostart: true
+      }).connect(finalNode)
     } else {
       const SynthClass = SynthMap[instrument] || Tone.Synth
       const synth = new Tone.PolySynth(SynthClass).connect(finalNode)
@@ -92,9 +100,9 @@ export async function renderToneToWav(config) {
 
       pitch.forEach((note, i) => {
         if (!note) return
-        const offset = parseFloat(rhythm[i]) || 0
-        const dur    = duration[i] || '1'
-        synth.triggerAttackRelease(note, dur, offset)
+        const offsetSec = Tone.Time(rhythm[i] ?? 0).toSeconds()
+        const durVal    = duration[i] ?? '1'
+        synth.triggerAttackRelease(note, durVal, offsetSec)
       })
     }
 
@@ -103,6 +111,7 @@ export async function renderToneToWav(config) {
 
   return audioBufferToWavBlob(buffer)
 }
+
 
 
 

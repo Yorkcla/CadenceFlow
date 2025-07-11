@@ -1,12 +1,26 @@
 // 저장 위치: src/utils/saveFinalAsset.js
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore'
 import { db } from './firebase'
 
+// 🎯 개별 저장 (merge 허용)
 export async function saveFinalAsset(userId, projectId, data) {
-  const safeId = String(data.id).trim()         // 숫자 → 문자열 변환 + 공백 제거
-  const safeType = String(data.type).trim()     // type도 혹시 몰라 안전 처리
-  const docId = `${safeType}-${safeId}`         // 예: 'phase-1' 또는 'step-3'
+  const safeId = String(data.id).trim()
+  const safeType = String(data.type).trim()
+  const docId = `${safeType}-${safeId}`
 
   const ref = doc(db, 'users', userId, 'projects', projectId, 'finalAssets', docId)
-  await setDoc(ref, { ...data, timestamp: Date.now() }, { merge: true }) // 🔁 덮어쓰기 허용
+  await setDoc(ref, { ...data, timestamp: Date.now() }, { merge: true })
 }
+
+// 🧹 전체 삭제 (초기화용)
+export async function deleteAllFinalAssets(userId, projectId) {
+  const colRef = collection(db, 'users', userId, 'projects', projectId, 'finalAssets')
+  const snapshot = await getDocs(colRef)
+
+  const deletions = snapshot.docs.map(docSnap =>
+    deleteDoc(doc(db, 'users', userId, 'projects', projectId, 'finalAssets', docSnap.id))
+  )
+
+  await Promise.all(deletions)
+}
+
