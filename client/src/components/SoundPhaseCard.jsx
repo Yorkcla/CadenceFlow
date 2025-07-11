@@ -24,7 +24,7 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
             onChange={e => onUpdateSoundConfig(phase.id, 'cognitivePhase', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
-            <option value="">Emotional Flow</option>
+            <option value="" disabled hidden>Emotional Flow</option>
             <option value="start">Start</option>
             <option value="rising">Build</option>
             <option value="peak">Peak</option>
@@ -38,7 +38,7 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
             onChange={e => onUpdateSoundConfig(phase.id, 'interactionIntent', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
-            <option value="">Interaction Intent</option>
+            <option value="" disabled hidden>Interaction Intent</option>
             <option value="warning">Alert</option>
             <option value="confirmation">Notification</option>
             <option value="welcome">Confirmation</option>
@@ -51,7 +51,7 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
             onChange={e => onUpdateSoundConfig(phase.id, 'urgency', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
-            <option value="">Importance</option>
+            <option value="" disabled hidden>Importance</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
