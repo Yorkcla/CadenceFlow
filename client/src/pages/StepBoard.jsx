@@ -6,6 +6,7 @@ import SquareButton from '../components/SquareButton'
 import { uploadStepImageToStorage } from '../utils/uploadImageToStorage'
 import { saveStepsToFirestore } from '../utils/saveSteps'
 import toast from 'react-hot-toast'
+import { Link } from 'react-router-dom'  
 
 export default function StepBoard() {
   const { phaseId } = useParams()
@@ -93,6 +94,9 @@ export default function StepBoard() {
           <SquareButton onClick={handleAddStep}>➕</SquareButton>
           <SquareButton onClick={handleRemoveStep}>❌</SquareButton>
           <SquareButton onClick={handleSaveSteps}>💾</SquareButton>
+          <Link to="/storyboard">
+            <SquareButton>←</SquareButton>
+          </Link>
         </div>
       </div>
     </div>
