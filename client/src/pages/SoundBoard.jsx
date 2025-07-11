@@ -13,13 +13,32 @@ import { saveFinalAsset, deleteAllFinalAssets } from '../utils/saveFinalAsset'
 import toast from 'react-hot-toast'
 import * as Tone from 'tone'
 
+// SessionStorage 키
+const SESSION_SELECTED_KEY = 'soundboard-selected'
+const SESSION_CONFIG_KEY = 'soundboard-config'
+
 export default function Soundboard() {
   const { userId, projectId } = useStore()
   const [phases, setPhases] = useState([])
   const [stepsByPhase, setStepsByPhase] = useState({})
-  const [selected, setSelected] = useState({})
-  const [soundConfig, setSoundConfig] = useState({})
 
+  // ✅ 세션스토리지에서 초기값 복원
+  const initialSelected = JSON.parse(sessionStorage.getItem(SESSION_SELECTED_KEY) || '{}')
+  const initialConfig = JSON.parse(sessionStorage.getItem(SESSION_CONFIG_KEY) || '{}')
+  const [selected, setSelected] = useState(initialSelected)
+  const [soundConfig, setSoundConfig] = useState(initialConfig)
+
+  // ✅ selected 변경될 때 저장
+  useEffect(() => {
+    sessionStorage.setItem(SESSION_SELECTED_KEY, JSON.stringify(selected))
+  }, [selected])
+
+  // ✅ soundConfig 변경될 때 저장
+  useEffect(() => {
+    sessionStorage.setItem(SESSION_CONFIG_KEY, JSON.stringify(soundConfig))
+  }, [soundConfig])
+
+  // Phase 불러오기
   useEffect(() => {
     const fetchPhases = async () => {
       if (!userId || !projectId) return
@@ -30,6 +49,7 @@ export default function Soundboard() {
     fetchPhases()
   }, [userId, projectId])
 
+  // Steps 불러오기
   useEffect(() => {
     const fetchSteps = async () => {
       if (!userId || !projectId || phases.length === 0) return
@@ -85,7 +105,6 @@ export default function Soundboard() {
         const phaseId = phase?.id
         const stepId = step?.id
 
-        // Sample인 경우에는 기존 URL 사용, 아니면 렌더링
         const isSample = config.instrument === 'Sample'
         const wavBlob = isSample ? null : await renderToneToWav(config)
         const soundUrl = isSample
@@ -175,6 +194,7 @@ export default function Soundboard() {
     </div>
   )
 }
+
 
 
 
