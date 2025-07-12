@@ -1,13 +1,13 @@
-import { generateImage } from '../genai/imageService.js'
+// server/controllers/imageController.js
+import { generateImage } from "../genai/imageService.js";
 
 export const handleImageGeneration = async (req, res) => {
-  const { prompt } = req.body
+  const { prompt } = req.body;
   try {
-    const filename = await generateImage(prompt)
-    res.json({ image: filename })
+    const image = await generateImage(prompt);
+    res.json({ success: true, image });
   } catch (error) {
-    console.error('Image generation error:', error)
-    res.status(500).json({ error: 'Image generation failed' })
+    console.error("Image generation error:", error.message);
+    res.status(500).json({ success: false, error: error.message });
   }
-}
-
+};

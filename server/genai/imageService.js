@@ -1,37 +1,39 @@
 // server/genai/imageService.js
-import { GoogleGenAI, Modality } from '@google/genai'
-import fs from 'fs'
+import { GoogleGenAI, Modality } from '@google/genai';
+import fs from 'fs';
 
 const genAI = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
-})
+});
 
 export async function generateImage(prompt) {
-  const result = await genAI.models.generateContent({
+  const model = genAI.models;
+
+  const result = await model.generateContent({
     model: 'gemini-2.0-flash-preview-image-generation',
-    contents: prompt,
+    contents: [{ text: prompt }],
     config: {
       responseModalities: [Modality.TEXT, Modality.IMAGE],
     },
-  })
+  });
 
-  const parts = result.candidates?.[0]?.content?.parts
-  if (!parts || parts.length === 0) {
-    throw new Error('No candidates returned from API')
-  }
+  const parts = result.candidates?.[0]?.content?.parts;
 
-  for (const part of parts) {
-    if (part.inlineData) {
-      const buffer = Buffer.from(part.inlineData.data, 'base64')
-      const filename = `gemini-image-${Date.now()}.png`
-      const outputPath = `./generated/${filename}`
-      fs.writeFileSync(outputPath, buffer)
-      return filename
-    }
-  }
+  if (!parts) throw new Error('No candidates returned from API');
 
-  throw new Error('No image data found in response')
+  const imagePart = parts.find(part => part.inlineData?.mimeType?.startsWith('image'));
+
+  if (!imagePart) throw new Error('No image found in response');
+
+  const buffer = Buffer.from(imagePart.inlineData.data, 'base64');
+  const filename = `gemini-image-${Date.now()}.png`;
+  const outputPath = `./generated/${filename}`;
+  fs.writeFileSync(outputPath, buffer);
+
+  console.log(`✅ Image saved as: ${filename}`);
+  return filename;
 }
+
 
 
 
