@@ -1,5 +1,0 @@
-export async function generateFromPrompt(prompt) {
-  // 예시: OpenAI API 호출
-  // const response = await openai.createCompletion({ prompt, ... })
-  return `Mocked GenAI response for: ${prompt}`
-}

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { Toaster } from 'react-hot-toast' // ✅ import 추가
+import { Toaster } from 'react-hot-toast'
 
 import Home from './pages/Home'
 import Onboarding from './pages/Onboarding'
@@ -29,7 +29,7 @@ export default function App() {
 
   return (
     <div>
-      <Toaster position="top-right" /> {/* ✅ 토스트 알림 컴포넌트 추가 */}
+      <Toaster position="top-right" />
 
       {!user && <LoginModal />}
       {user && (
