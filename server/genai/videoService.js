@@ -1,38 +1,36 @@
+// genai/videoService.js
 import { GoogleGenAI } from '@google/genai';
-import { createWriteStream } from 'fs';
-import { Readable } from 'stream';
+import fetch from 'node-fetch';               // node 20↓이면 추가 설치 필요
 
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-export async function generateVideo(prompt) {
+/**
+ * @param {object} opts {prompt, aspectRatio}
+ * @returns {string} signed mp4 URL
+ */
+export async function generateVideo(opts) {
+  // 1) 비디오 생성 요청
   let operation = await genAI.models.generateVideos({
     model: 'veo-2.0-generate-001',
-    prompt,
+    prompt: opts.prompt,
     config: {
-      aspectRatio: '16:9',
+      aspectRatio: opts.aspectRatio,
+      personGeneration: 'dont_allow', // 필요 시 변경
       durationSeconds: 6,
-      personGeneration: 'dont_allow',
     },
   });
 
+  // 2) 폴링 (10초 간격)
   while (!operation.done) {
-    await new Promise((res) => setTimeout(res, 10000));
+    await new Promise(r => setTimeout(r, 10_000));
     operation = await genAI.operations.getVideosOperation({ operation });
   }
 
-  const videos = operation.response?.generatedVideos || [];
-  const savedPaths = [];
-
-  for (let i = 0; i < videos.length; i++) {
-    const uri = videos[i].video?.uri;
-    if (!uri) continue;
-
-    const res = await fetch(`${uri}&key=${process.env.GEMINI_API_KEY}`);
-    const writer = createWriteStream(`video${i}.mp4`);
-    Readable.fromWeb(res.body).pipe(writer);
-    savedPaths.push(`video${i}.mp4`);
-  }
-
-  return savedPaths;
+  // 3) 결과 URL 추출
+  const videoObj = operation.response?.generatedVideos?.[0];
+  if (!videoObj?.video?.uri) throw new Error('No video URI returned');
+  // 서명 URL에 API 키 붙이기
+  return `${videoObj.video.uri}&key=${process.env.GEMINI_API_KEY}`;
 }
+
 

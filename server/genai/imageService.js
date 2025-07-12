@@ -25,13 +25,8 @@ export async function generateImage(prompt) {
 
   if (!imagePart) throw new Error('No image found in response');
 
-  const buffer = Buffer.from(imagePart.inlineData.data, 'base64');
-  const filename = `gemini-image-${Date.now()}.png`;
-  const outputPath = `./generated/${filename}`;
-  fs.writeFileSync(outputPath, buffer);
-
-  console.log(`✅ Image saved as: ${filename}`);
-  return filename;
+  console.log('✅ Image successfully generated.')
+  return 'success'
 }
 
 

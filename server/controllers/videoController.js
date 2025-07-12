@@ -1,16 +1,15 @@
 // controllers/videoController.js
 import { generateVideo } from '../genai/videoService.js';
 
-export async function handleVideoGeneration(req, res) {
-  const { prompt } = req.body;
-  if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
-
+export const handleVideoGeneration = async (req, res) => {
+  const { prompt, aspectRatio = '16:9' } = req.body;
   try {
-    const paths = await generateVideo(prompt);
-    res.json({ message: 'Video generated', files: paths });
-  } catch (err) {
-    console.error('Video generation error:', err);
-    res.status(500).json({ error: 'Failed to generate video' });
+    const videoUrl = await generateVideo({ prompt, aspectRatio });
+    res.json({ success: true, videoUrl });
+  } catch (e) {
+    console.error('Video generation error:', e);
+    res.status(500).json({ success: false, error: e.message });
   }
-}
+};
+
 
