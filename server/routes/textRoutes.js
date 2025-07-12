@@ -3,7 +3,7 @@ import { handleTextGeneration } from '../controllers/textController.js'
 
 const router = express.Router()
 
-router.post('/text', handleTextGeneration)
+router.post('/', handleTextGeneration)
 
 export default router
 
