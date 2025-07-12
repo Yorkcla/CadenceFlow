@@ -1,6 +1,5 @@
 // genai/videoService.js
 import { GoogleGenAI } from '@google/genai';
-import fetch from 'node-fetch';               // node 20↓이면 추가 설치 필요
 
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
