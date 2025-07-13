@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react'
 import P5Canvas from './P5Canvas'
 import toast from 'react-hot-toast'
+import { generateText } from '../utils/generateText'
+import { makeStepTextPrompt } from '../utils/promptTemplates'
 
 export default function StepCard({ step, onChange }) {
   const [isEditing, setIsEditing] = useState(false)
@@ -13,11 +15,23 @@ export default function StepCard({ step, onChange }) {
   }
 
   const handleAiEdit = async () => {
-    setIsEditing(true)
-    const revised = await fakeGeminiEdit(step.description)
-    handleChange('description', revised)
-    setIsEditing(false)
+  const userInput = step.description?.trim();
+  if (!userInput) {
+    toast.error('먼저 내용을 입력하세요!');
+    return;
   }
+
+  setIsEditing(true);
+  try {
+    const prompt = makeStepTextPrompt(userInput); 
+    const revised = await generateText(prompt);       
+    handleChange('description', revised);             
+  } catch (err) {
+    toast.error(err.message || 'AI 호출 실패');
+  }
+  setIsEditing(false);
+  };
+
 
   const handleAiImage = async () => {
     setIsGenerating(true)

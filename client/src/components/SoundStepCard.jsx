@@ -1,7 +1,47 @@
 import React from 'react'
 import MiniSquareButton from './MiniSquareButton'
+import { makeSoundDesignPrompt } from '../utils/promptTemplates'
+import { generateText } from '../utils/generateText'
+import toast from 'react-hot-toast'
 
-export default function SoundStepCard({ step, selected, onSelect, soundParams = {}, onUpdateSoundConfig }) {
+export default function SoundStepCard({
+  step,
+  selected,
+  onSelect,
+  soundConfig = {},
+  onUpdateSoundConfig,
+  onUpdateSoundPanel
+}) {
+  const idStr = String(step.id)
+  const config = soundConfig[idStr] || {}
+
+  const handleGenerateSound = async () => {
+    if (!config.cognitivePhase || !config.interactionIntent || !config.urgency) {
+      toast.error('드롭다운 정보를 먼저 입력해주세요')
+      return
+    }
+
+    const prompt = makeSoundDesignPrompt(config)
+    try {
+      const aiResult = await generateText(prompt)
+      let parsed = {}
+      try {
+        parsed = JSON.parse(aiResult)
+      } catch {
+        toast.error('AI 결과 파싱 실패')
+        return
+      }
+
+      Object.entries(parsed).forEach(([key, value]) => {
+        onUpdateSoundPanel(step.id, key, value)
+      })
+
+      toast.success('AI 사운드 제안 반영 완료!')
+    } catch (err) {
+      toast.error(err.message || 'AI 호출 실패')
+    }
+  }
+
   return (
     <div className={`border rounded-xl p-4 shadow space-y-3 w-64 flex-shrink-0 ${selected ? 'bg-sky-100' : 'bg-white'}`}>
       <p className="text-sm font-medium border-b border-gray-300 pb-1">{step.description}</p>
@@ -19,7 +59,7 @@ export default function SoundStepCard({ step, selected, onSelect, soundParams = 
       {selected && (
         <div className="flex flex-col gap-2 pt-2">
           <select
-            value={soundParams.cognitivePhase || ''}
+            value={config.cognitivePhase || ''}
             onChange={e => onUpdateSoundConfig(step.id, 'cognitivePhase', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
@@ -29,11 +69,11 @@ export default function SoundStepCard({ step, selected, onSelect, soundParams = 
             <option value="peak">Peak</option>
             <option value="falling">Ease</option>
             <option value="end">End</option>
-            <option value="end">Attention</option>
+            <option value="attention">Attention</option>
           </select>
 
           <select
-            value={soundParams.interactionIntent || ''}
+            value={config.interactionIntent || ''}
             onChange={e => onUpdateSoundConfig(step.id, 'interactionIntent', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
@@ -46,7 +86,7 @@ export default function SoundStepCard({ step, selected, onSelect, soundParams = 
           </select>
 
           <select
-            value={soundParams.urgency || ''}
+            value={config.urgency || ''}
             onChange={e => onUpdateSoundConfig(step.id, 'urgency', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
@@ -55,6 +95,10 @@ export default function SoundStepCard({ step, selected, onSelect, soundParams = 
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
+
+          <div className="flex justify-end pt-1">
+            <MiniSquareButton onClick={handleGenerateSound}>✨</MiniSquareButton>
+          </div>
         </div>
       )}
 
@@ -64,6 +108,8 @@ export default function SoundStepCard({ step, selected, onSelect, soundParams = 
     </div>
   )
 }
+
+
 
 
 

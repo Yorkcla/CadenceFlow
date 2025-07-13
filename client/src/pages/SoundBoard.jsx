@@ -145,7 +145,7 @@ export default function Soundboard() {
                 phase={phase}
                 selected={selected[`phase-${phase.id}`]}
                 onSelect={() => toggleSelect('phase', phase.id)}
-                soundConfig={soundConfig[phase.id] || {}}
+                soundConfig={soundConfig}
                 onUpdateSoundConfig={onUpdateSoundConfig}
               />
               {selected[`phase-${phase.id}`] && (
@@ -167,7 +167,7 @@ export default function Soundboard() {
                   step={step}
                   selected={selected[`step-${step.id}`]}
                   onSelect={() => toggleSelect('step', step.id)}
-                  soundConfig={soundConfig[step.id] || {}}
+                  soundConfig={soundConfig}
                   onUpdateSoundConfig={onUpdateSoundConfig}
                 />
                 {selected[`step-${step.id}`] && (

@@ -3,6 +3,8 @@ import useStore from '../store/useStore'
 import { Link } from 'react-router-dom'
 import P5Canvas from './P5Canvas'
 import toast from 'react-hot-toast'
+import { generateText } from '../utils/generateText'
+import { makePhaseTextPrompt } from '../utils/promptTemplates'
 
 export default function PhaseCard({ phase }) {
   const { phases, setPhases } = useStore()
@@ -20,11 +22,22 @@ export default function PhaseCard({ phase }) {
   }
 
   const handleAiEdit = async () => {
-    setLoading(true)
-    const revised = await fakeGeminiEdit(phase.description)
-    handleChange('description', revised)
-    setLoading(false)
+  if (!phase.description?.trim()) {
+    toast.error('먼저 내용을 입력해 주세요!');
+    return;
   }
+
+  const prompt = makePhaseTextPrompt(phase.description); //
+
+  setLoading(true);
+  try {
+    const result = await generateText(prompt); // 프론트 util 그대로 사용
+    handleChange('description', result); // 결과로 덮어쓰기
+  } catch (err) {
+    toast.error(err.message || '텍스트 생성 실패');
+  }
+  setLoading(false);
+  };
 
   const handleAiImage = async () => {
     setImageLoading(true)

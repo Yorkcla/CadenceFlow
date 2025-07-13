@@ -1,7 +1,47 @@
 import React from 'react'
 import MiniSquareButton from './MiniSquareButton'
+import { makeSoundDesignPrompt } from '../utils/promptTemplates'
+import { generateText } from '../utils/generateText'
+import toast from 'react-hot-toast'
 
-export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig = {}, onUpdateSoundConfig }) {
+export default function SoundPhaseCard({
+  phase,
+  selected,
+  onSelect,
+  soundConfig = {},
+  onUpdateSoundConfig,
+  onUpdateSoundPanel
+}) {
+  const idStr = String(phase.id)
+  const config = soundConfig[idStr] || {}
+
+  const handleGenerateSound = async () => {
+    if (!config.cognitivePhase || !config.interactionIntent || !config.urgency) {
+      toast.error('드롭다운 정보를 먼저 입력해주세요')
+      return
+    }
+
+    const prompt = makeSoundDesignPrompt(config)
+    try {
+      const aiResult = await generateText(prompt)
+      let parsed = {}
+      try {
+        parsed = JSON.parse(aiResult)
+      } catch {
+        toast.error('AI 결과 파싱 실패')
+        return
+      }
+
+      Object.entries(parsed).forEach(([key, value]) => {
+        onUpdateSoundPanel(idStr, key, value)
+      })
+
+      toast.success('AI 사운드 제안 반영 완료!')
+    } catch (err) {
+      toast.error(err.message || 'AI 호출 실패')
+    }
+  }
+
   return (
     <div className={`border rounded-xl p-4 shadow space-y-3 w-64 flex-shrink-0 ${selected ? 'bg-sky-100' : 'bg-white'}`}>
       <h3 className="text-lg font-semibold border-b border-gray-300 pb-1">{phase.title}</h3>
@@ -20,8 +60,8 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
       {selected && (
         <div className="flex flex-col gap-2 pt-2">
           <select
-            value={soundConfig.cognitivePhase || ''}
-            onChange={e => onUpdateSoundConfig(phase.id, 'cognitivePhase', e.target.value)}
+            value={config.cognitivePhase || ''}
+            onChange={e => onUpdateSoundConfig(idStr, 'cognitivePhase', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
             <option value="" disabled hidden>Emotional Flow</option>
@@ -30,12 +70,12 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
             <option value="peak">Peak</option>
             <option value="falling">Ease</option>
             <option value="end">End</option>
-            <option value="falling">Attention</option>
+            <option value="attention">Attention</option>
           </select>
 
           <select
-            value={soundConfig.interactionIntent || ''}
-            onChange={e => onUpdateSoundConfig(phase.id, 'interactionIntent', e.target.value)}
+            value={config.interactionIntent || ''}
+            onChange={e => onUpdateSoundConfig(idStr, 'interactionIntent', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
             <option value="" disabled hidden>Interaction Intent</option>
@@ -43,12 +83,12 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
             <option value="confirmation">Notification</option>
             <option value="welcome">Confirmation</option>
             <option value="error">Guidance</option>
-            <option value="notification">Expression</option>
+            <option value="expression">Expression</option>
           </select>
 
           <select
-            value={soundConfig.urgency || ''}
-            onChange={e => onUpdateSoundConfig(phase.id, 'urgency', e.target.value)}
+            value={config.urgency || ''}
+            onChange={e => onUpdateSoundConfig(idStr, 'urgency', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
             <option value="" disabled hidden>Importance</option>
@@ -56,6 +96,10 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
+
+          <div className="flex justify-end pt-1">
+            <MiniSquareButton onClick={handleGenerateSound}>✨</MiniSquareButton>
+          </div>
         </div>
       )}
 
@@ -65,6 +109,10 @@ export default function SoundPhaseCard({ phase, selected, onSelect, soundConfig 
     </div>
   )
 }
+
+
+
+
 
 
 
