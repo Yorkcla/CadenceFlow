@@ -34,4 +34,14 @@ Return only the JSON. Do not include explanations or extra text.
   `.trim();
 }
 
+export const makePhaseImagePrompt = (description) => {
+  return `Create a storyboard-style image showing: "${description}". 
+Use a clean layout with soft colors, focusing on the user interaction described.`;
+}
+
+export const makeStepImagePrompt = (description) => {
+  return `Illustrate the following moment: "${description}". 
+Use a flat design with clear actions and minimal background.`;
+}
+
 

@@ -1,4 +1,3 @@
-// src/components/PhaseCard.jsx
 import React, { useRef, useState } from 'react'
 import useStore from '../store/useStore'
 import { Link } from 'react-router-dom'
@@ -7,6 +6,7 @@ import toast from 'react-hot-toast'
 import { generateText } from '../utils/generateText'
 import { generateImage } from '../utils/generateImage'
 import { makePhaseTextPrompt } from '../utils/promptTemplates'
+import { makePhaseImagePrompt } from '../utils/promptTemplates'
 
 export default function PhaseCard({ phase }) {
   const { phases, setPhases } = useStore()
@@ -48,7 +48,8 @@ export default function PhaseCard({ phase }) {
 
     setImageLoading(true)
     try {
-      const base64DataUrl = await generateImage(phase.description)
+      const prompt = makePhaseImagePrompt(phase.description)
+      const base64DataUrl = await generateImage(prompt)
 
       // ✅ base64 → Blob → URL 변환만
       const response = await fetch(base64DataUrl)

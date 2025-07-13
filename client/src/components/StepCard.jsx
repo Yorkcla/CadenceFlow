@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import { generateText } from '../utils/generateText'
 import { generateImage } from '../utils/generateImage'
 import { makeStepTextPrompt } from '../utils/promptTemplates'
+import { makeStepImagePrompt } from '../utils/promptTemplates'
 
 export default function StepCard({ step, onChange }) {
   const [isEditing, setIsEditing] = useState(false)
@@ -42,7 +43,8 @@ export default function StepCard({ step, onChange }) {
 
     setIsGenerating(true)
     try {
-      const base64 = await generateImage(step.description)
+      const prompt = makeStepImagePrompt(step.description)
+      const base64 = await generateImage(prompt)
 
       if (!base64.startsWith('data:image')) {
         throw new Error('올바른 이미지 형식이 아닙니다.')
