@@ -96,8 +96,8 @@ export default function SoundStepCard({
             <option value="high">High</option>
           </select>
 
-          <div className="flex justify-end pt-1">
-            <MiniSquareButton onClick={handleGenerateSound}>✨</MiniSquareButton>
+          <div className="text-right flex items-center justify-end gap-2">
+            <MiniSquareButton onClick={handleGenerateSound}>🎵</MiniSquareButton>
           </div>
         </div>
       )}
