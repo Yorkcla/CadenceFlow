@@ -1,3 +1,4 @@
+// src/components/PhaseCard.jsx
 import React, { useRef, useState } from 'react'
 import useStore from '../store/useStore'
 import { Link } from 'react-router-dom'
@@ -6,10 +7,9 @@ import toast from 'react-hot-toast'
 import { generateText } from '../utils/generateText'
 import { generateImage } from '../utils/generateImage'
 import { makePhaseTextPrompt } from '../utils/promptTemplates'
-import { uploadPhaseImageToStorage } from '../utils/uploadImageToStorage'
 
 export default function PhaseCard({ phase }) {
-  const { phases, setPhases, userId, projectId } = useStore()
+  const { phases, setPhases } = useStore()
   const [loading, setLoading] = useState(false)
   const [imageLoading, setImageLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(phase.imageUrl || '')
@@ -50,14 +50,13 @@ export default function PhaseCard({ phase }) {
     try {
       const base64DataUrl = await generateImage(phase.description)
 
-      // ✅ base64 → Blob 변환
+      // ✅ base64 → Blob → URL 변환만
       const response = await fetch(base64DataUrl)
       const blob = await response.blob()
+      const localUrl = URL.createObjectURL(blob)
 
-      // ✅ Firebase 업로드 후 URL 저장
-      const firebaseUrl = await uploadPhaseImageToStorage(blob, userId, projectId, phase.id)
-      setImageUrl(firebaseUrl)
-      handleChange('imageUrl', firebaseUrl)
+      setImageUrl(localUrl)
+      handleChange('imageUrl', localUrl)
     } catch (err) {
       toast.error(err.message || '이미지 생성 실패')
     }
@@ -182,6 +181,7 @@ export default function PhaseCard({ phase }) {
     </div>
   )
 }
+
 
 
 

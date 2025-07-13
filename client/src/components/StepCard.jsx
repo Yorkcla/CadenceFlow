@@ -4,11 +4,8 @@ import toast from 'react-hot-toast'
 import { generateText } from '../utils/generateText'
 import { generateImage } from '../utils/generateImage'
 import { makeStepTextPrompt } from '../utils/promptTemplates'
-import { uploadStepImageToStorage } from '../utils/uploadImageToStorage'
-import useStore from '../store/useStore'
 
-export default function StepCard({ step, phaseId, onChange }) {
-  const { userId, projectId } = useStore()
+export default function StepCard({ step, onChange }) {
   const [isEditing, setIsEditing] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [showCanvas, setShowCanvas] = useState(false)
@@ -52,7 +49,7 @@ export default function StepCard({ step, phaseId, onChange }) {
       }
 
       const blob = await fetch(base64).then(res => res.blob())
-      const url = await uploadStepImageToStorage(blob, userId, projectId, phaseId, step.id)
+      const url = URL.createObjectURL(blob)
 
       setImageUrl(url)
       handleChange('imageUrl', url)
@@ -130,6 +127,7 @@ export default function StepCard({ step, phaseId, onChange }) {
     </div>
   )
 }
+
 
 
 
