@@ -78,6 +78,16 @@ export default function Soundboard() {
     }))
   }
 
+  const onUpdateSoundPanel = (id, key, value) => {
+    setSoundConfig(prev => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [key]: value,
+      },
+    }))
+  }  
+
   const handleSaveSounds = async () => {
     const selectedKeys = Object.keys(selected).filter(k => selected[k])
     if (selectedKeys.length === 0) {
@@ -147,6 +157,7 @@ export default function Soundboard() {
                 onSelect={() => toggleSelect('phase', phase.id)}
                 soundConfig={soundConfig}
                 onUpdateSoundConfig={onUpdateSoundConfig}
+                onUpdateSoundPanel={onUpdateSoundPanel}
               />
               {selected[`phase-${phase.id}`] && (
                 <SoundPanel
@@ -169,6 +180,7 @@ export default function Soundboard() {
                   onSelect={() => toggleSelect('step', step.id)}
                   soundConfig={soundConfig}
                   onUpdateSoundConfig={onUpdateSoundConfig}
+                  onUpdateSoundPanel={onUpdateSoundPanel}
                 />
                 {selected[`step-${step.id}`] && (
                   <SoundPanel

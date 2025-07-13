@@ -26,14 +26,31 @@ export default function SoundPhaseCard({
       const aiResult = await generateText(prompt)
       let parsed = {}
       try {
-        parsed = JSON.parse(aiResult)
-      } catch {
+        const cleanText = aiResult.trim()
+          .replace(/^```json/, '')
+          .replace(/^```/, '')
+          .replace(/```$/, '')
+          .trim()
+      
+        parsed = JSON.parse(cleanText)
+      } catch (err) {
+        console.error('Parsing failed:', err, aiResult)
         toast.error('AI 결과 파싱 실패')
         return
       }
 
       Object.entries(parsed).forEach(([key, value]) => {
-        onUpdateSoundPanel(idStr, key, value)
+        if (key === 'notes') {
+          const pitches = value.map(n => n.pitch)
+          const rhythms = value.map(n => n.rhythm)
+          const durations = value.map(n => n.duration)
+      
+          onUpdateSoundPanel(phase.id, 'pitch', pitches)
+          onUpdateSoundPanel(phase.id, 'rhythm', rhythms)
+          onUpdateSoundPanel(phase.id, 'duration', durations)
+        } else {
+          onUpdateSoundPanel(phase.id, key, value) // 예: volume
+        }
       })
 
       toast.success('AI 사운드 제안 반영 완료!')
