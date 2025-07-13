@@ -2,41 +2,63 @@ import React, { useRef, useState } from 'react'
 import P5Canvas from './P5Canvas'
 import toast from 'react-hot-toast'
 import { generateText } from '../utils/generateText'
+import { generateImage } from '../utils/generateImage'
 import { makeStepTextPrompt } from '../utils/promptTemplates'
+import { uploadStepImageToStorage } from '../utils/uploadImageToStorage'
+import useStore from '../store/useStore'
 
-export default function StepCard({ step, onChange }) {
+export default function StepCard({ step, phaseId, onChange }) {
+  const { userId, projectId } = useStore()
   const [isEditing, setIsEditing] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [showCanvas, setShowCanvas] = useState(false)
-  const localCanvasRef = useRef(null)
+  const [imageUrl, setImageUrl] = useState(step.imageUrl || '')
+  const canvasRef = useRef(null)
 
   const handleChange = (field, value) => {
     onChange({ ...step, [field]: value })
   }
 
   const handleAiEdit = async () => {
-  const userInput = step.description?.trim();
-  if (!userInput) {
-    toast.error('먼저 내용을 입력하세요!');
-    return;
-  }
+    const input = step.description?.trim()
+    if (!input) {
+      toast.error('먼저 내용을 입력하세요!')
+      return
+    }
 
-  setIsEditing(true);
-  try {
-    const prompt = makeStepTextPrompt(userInput); 
-    const revised = await generateText(prompt);       
-    handleChange('description', revised);             
-  } catch (err) {
-    toast.error(err.message || 'AI 호출 실패');
+    setIsEditing(true)
+    try {
+      const prompt = makeStepTextPrompt(input)
+      const result = await generateText(prompt)
+      handleChange('description', result)
+    } catch (err) {
+      toast.error(err.message || 'AI 편집 실패')
+    }
+    setIsEditing(false)
   }
-  setIsEditing(false);
-  };
-
 
   const handleAiImage = async () => {
+    if (!step.description?.trim()) {
+      toast.error('먼저 설명을 입력하세요!')
+      return
+    }
+
     setIsGenerating(true)
-    const url = await fakeGeminiImage(step.description)
-    handleChange('imageUrl', url)
+    try {
+      const base64 = await generateImage(step.description)
+
+      if (!base64.startsWith('data:image')) {
+        throw new Error('올바른 이미지 형식이 아닙니다.')
+      }
+
+      const blob = await fetch(base64).then(res => res.blob())
+      const url = await uploadStepImageToStorage(blob, userId, projectId, phaseId, step.id)
+
+      setImageUrl(url)
+      handleChange('imageUrl', url)
+    } catch (err) {
+      toast.error(err.message || '이미지 생성 실패')
+    }
     setIsGenerating(false)
   }
 
@@ -44,26 +66,20 @@ export default function StepCard({ step, onChange }) {
     const file = e.target.files[0]
     if (file && file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file)
+      setImageUrl(url)
       handleChange('imageUrl', url)
     }
   }
 
   const handleCanvasSave = async () => {
-    if (localCanvasRef.current?.getCanvasBlob) {
-      const blob = await localCanvasRef.current.getCanvasBlob()
+    if (canvasRef.current?.getCanvasBlob) {
+      const blob = await canvasRef.current.getCanvasBlob()
       const url = URL.createObjectURL(blob)
+      setImageUrl(url)
       handleChange('imageUrl', url)
       setShowCanvas(false)
       toast.success('Canvas Saved')
     }
-  }
-
-  const fakeGeminiEdit = async (text) => {
-    return new Promise((res) => setTimeout(() => res(`[AI Result] ${text}`), 1000))
-  }
-
-  const fakeGeminiImage = async (text) => {
-    return new Promise((res) => setTimeout(() => res(`https://via.placeholder.com/300x180?text=${encodeURIComponent(text)}`), 1500))
   }
 
   return (
@@ -77,13 +93,15 @@ export default function StepCard({ step, onChange }) {
       />
 
       <div className="relative w-full h-40 border bg-gray-100 rounded overflow-hidden">
-        {step.imageUrl ? (
-          <img src={step.imageUrl} alt="Step" className="absolute inset-0 w-full h-full object-cover" />
-        ) : showCanvas ? (
+        {imageUrl && (
+          <img src={imageUrl} alt="Step" className="absolute inset-0 w-full h-full object-cover" />
+        )}
+        {showCanvas && (
           <div className="absolute inset-0 z-10">
-            <P5Canvas ref={localCanvasRef} />
+            <P5Canvas ref={canvasRef} />
           </div>
-        ) : (
+        )}
+        {!imageUrl && !showCanvas && (
           <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">
             No image
           </div>
@@ -112,6 +130,7 @@ export default function StepCard({ step, onChange }) {
     </div>
   )
 }
+
 
 
 

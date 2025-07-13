@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom'
 import P5Canvas from './P5Canvas'
 import toast from 'react-hot-toast'
 import { generateText } from '../utils/generateText'
+import { generateImage } from '../utils/generateImage'
 import { makePhaseTextPrompt } from '../utils/promptTemplates'
+import { uploadPhaseImageToStorage } from '../utils/uploadImageToStorage'
 
 export default function PhaseCard({ phase }) {
-  const { phases, setPhases } = useStore()
+  const { phases, setPhases, userId, projectId } = useStore()
   const [loading, setLoading] = useState(false)
   const [imageLoading, setImageLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(phase.imageUrl || '')
@@ -22,28 +24,43 @@ export default function PhaseCard({ phase }) {
   }
 
   const handleAiEdit = async () => {
-  if (!phase.description?.trim()) {
-    toast.error('먼저 내용을 입력해 주세요!');
-    return;
-  }
+    if (!phase.description?.trim()) {
+      toast.error('먼저 내용을 입력해 주세요!')
+      return
+    }
 
-  const prompt = makePhaseTextPrompt(phase.description); //
-
-  setLoading(true);
-  try {
-    const result = await generateText(prompt); // 프론트 util 그대로 사용
-    handleChange('description', result); // 결과로 덮어쓰기
-  } catch (err) {
-    toast.error(err.message || '텍스트 생성 실패');
+    const prompt = makePhaseTextPrompt(phase.description)
+    setLoading(true)
+    try {
+      const result = await generateText(prompt)
+      handleChange('description', result)
+    } catch (err) {
+      toast.error(err.message || '텍스트 생성 실패')
+    }
+    setLoading(false)
   }
-  setLoading(false);
-  };
 
   const handleAiImage = async () => {
+    if (!phase.description?.trim()) {
+      toast.error('먼저 설명을 입력해 주세요!')
+      return
+    }
+
     setImageLoading(true)
-    const url = await fakeGeminiImage(phase.description)
-    setImageUrl(url)
-    handleChange('imageUrl', url)
+    try {
+      const base64DataUrl = await generateImage(phase.description)
+
+      // ✅ base64 → Blob 변환
+      const response = await fetch(base64DataUrl)
+      const blob = await response.blob()
+
+      // ✅ Firebase 업로드 후 URL 저장
+      const firebaseUrl = await uploadPhaseImageToStorage(blob, userId, projectId, phase.id)
+      setImageUrl(firebaseUrl)
+      handleChange('imageUrl', firebaseUrl)
+    } catch (err) {
+      toast.error(err.message || '이미지 생성 실패')
+    }
     setImageLoading(false)
   }
 
@@ -62,20 +79,8 @@ export default function PhaseCard({ phase }) {
       const url = URL.createObjectURL(blob)
       setImageUrl(url)
       handleChange('imageUrl', url)
-      toast.success('Canvas Saved') // ✅ 알림 추가
+      toast.success('Canvas Saved')
     }
-  }
-
-  const fakeGeminiEdit = async (text) => {
-    return new Promise((res) =>
-      setTimeout(() => res(`[AI Result] ${text}`), 1000)
-    )
-  }
-
-  const fakeGeminiImage = async (text) => {
-    return new Promise((res) =>
-      setTimeout(() => res(`https://via.placeholder.com/300x180?text=${encodeURIComponent(text)}`), 1500)
-    )
   }
 
   return (
@@ -95,7 +100,6 @@ export default function PhaseCard({ phase }) {
         rows={3}
       />
 
-      {/* 이미지 or 캔버스 표시 */}
       <div className="relative w-full h-40 border rounded-lg overflow-hidden">
         {imageUrl && (
           <img
@@ -116,7 +120,6 @@ export default function PhaseCard({ phase }) {
         )}
       </div>
 
-      {/* 버튼들 */}
       <div className="text-right flex items-center justify-end gap-2">
         {(loading || imageLoading) && (
           <div className="text-xs text-gray-500 italic mr-auto">
@@ -179,6 +182,7 @@ export default function PhaseCard({ phase }) {
     </div>
   )
 }
+
 
 
 

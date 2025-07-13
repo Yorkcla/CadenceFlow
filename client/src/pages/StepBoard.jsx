@@ -85,6 +85,7 @@ export default function StepBoard() {
           <StepCard
             key={step.id || index}
             step={step}
+            phaseId={phaseId}
             onChange={(updated) => handleStepChange(updated, index)}
             canvasRef={(ref) => { canvasRefs.current[step.id] = ref }}
           />
