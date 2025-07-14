@@ -51,7 +51,7 @@ export default function ReviewCard({ asset, onOpenVideo }) {
           {isPlaying ? '⏸️' : '🔊'}
         </MiniSquareButton>
 
-        <MiniSquareButton onClick={() => onOpenVideo(asset)}>
+        <MiniSquareButton onClick={onOpenVideo}>
           🎬
         </MiniSquareButton>
 

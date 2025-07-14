@@ -81,7 +81,6 @@ export default function VideoPanel({ asset }) {
             onChange={(e) => setDelaySec(parseFloat(e.target.value))}
             className="w-16 px-1 border rounded text-center"
           />
-          s
         </label>
       </div>
 

@@ -36,11 +36,15 @@ export default function Review() {
   const [reviewGroups, setReviewGroups] = useState([])
   const [otherTitle, setOtherTitle] = useState('')
 
-  // ✅ 추가: 비디오 패널 상태
-  const [openVideoAssetId, setOpenVideoAssetId] = useState(null)
-  const handleOpenVideo = (asset) => {
-    setOpenVideoAssetId(prev => (prev === asset.id ? null : asset.id))
-  }
+  // 여러 패널 열기용 map (id => true/false) // changed
+  const [openVideoAssetIds, setOpenVideoAssetIds] = useState({}) // changed
+
+  // id별 열-닫기 토글 // changed
+  const toggleVideoPanel = (assetId) => {                         // changed
+    setOpenVideoAssetIds(prev => ({                               // changed
+      ...prev, [assetId]: !prev[assetId]                          // changed
+    }))                                                           // changed
+  }                                                               // changed
 
   useEffect(() => {
     const fetchInitial = async () => {
@@ -109,11 +113,17 @@ export default function Review() {
             <div className="flex gap-6 overflow-x-auto flex-nowrap pb-4">
               {group.assets.map((asset, i) => (
                 <div key={`${group.title}-${i}`}>
-                  <ReviewCard asset={asset} onOpenVideo={handleOpenVideo} />
+                  <ReviewCard
+                    asset={asset}
+                    onOpenVideo={() => toggleVideoPanel(asset.id)} // changed
+                  />
 
-                  {/* ✅ 선택된 카드에만 VideoPanel 표시 */}
-                  {openVideoAssetId === asset.id && (
-                    <VideoPanel asset={asset} userId={userId} projectId={projectId} />
+                  {openVideoAssetIds[asset.id] && (               // changed
+                    <VideoPanel
+                      asset={asset}
+                      userId={userId}
+                      projectId={group.projectId}
+                    />
                   )}
                 </div>
               ))}
@@ -129,6 +139,7 @@ export default function Review() {
     </div>
   )
 }
+
 
 
 

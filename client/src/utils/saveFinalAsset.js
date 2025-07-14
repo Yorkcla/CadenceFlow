@@ -30,3 +30,8 @@ export async function deleteAllFinalAssets(userId, projectId) {
   await Promise.all(deletions)
 }
 
+export async function updateVideoUrlInFirestore(assetId, url) {
+  const ref = doc(db, 'finalAssets', assetId);
+  await updateDoc(ref, { videoDownloadUrl: url });
+}
+
