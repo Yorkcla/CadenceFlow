@@ -69,7 +69,7 @@ export default function Review() {
   // 🔹 프로젝트별 ZIP 다운로드
   const handleDownloadZip = async (targetProjectId) => {
     try {
-      const snap = await getDocs(collection(db, 'projects', targetProjectId, 'finalAssets'))
+      const snap = await getDocs(collection(db, 'users', userId, 'projects', targetProjectId, 'finalAssets'))
       const assets = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
       const zipBlob = await createProjectZip(targetProjectId, assets)
       saveAs(zipBlob, `project-${targetProjectId}.zip`)
@@ -113,7 +113,7 @@ export default function Review() {
               {/* 📦 해당 프로젝트 저장 버튼 */}
               <div className="flex flex-col gap-2 flex-shrink-0">
                 <SquareButton onClick={() => handleDownloadZip(group.projectId)}>
-                  📦
+                  💾
                 </SquareButton>
               </div>
             </div>

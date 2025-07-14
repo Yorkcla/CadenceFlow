@@ -4,19 +4,26 @@ export async function createProjectZip(projectId, assets) {
   const zip = new JSZip()
   zip.file('project-data.json', JSON.stringify(assets, null, 2))
 
+  /* 🚩 공용 헬퍼 */
   const addFile = async (url, folder, filename) => {
-    if (!url) return
-    const res = await fetch(url)
-    const blob = await res.blob()
-    zip.folder(folder).file(filename, blob)
+    if (!url) return             // null / undefined 건너뛰기
+    try {
+      const res  = await fetch(url)
+      if (!res.ok) throw new Error('fetch failed')
+      const blob = await res.blob()
+      zip.folder(folder).file(filename, blob)
+    } catch (e) {
+      console.warn('⚠️  skip (fetch error):', url)
+    }
   }
 
+  /* 🗂️ 각 에셋 처리 */
   const tasks = assets.flatMap(asset => {
-    const { id, imageUrl, audioUrl, videoUrl } = asset
+    const { id, imageUrl, soundUrl } = asset
     return [
       addFile(imageUrl, 'images', `${id}.jpg`),
-      addFile(audioUrl, 'audio', `${id}.mp3`),
-      addFile(videoUrl, 'video', `${id}.mp4`),
+      // 🔑 WAV 확장자 & soundUrl 사용
+      addFile(soundUrl, 'audio', `${id}.wav`)
     ]
   })
 
