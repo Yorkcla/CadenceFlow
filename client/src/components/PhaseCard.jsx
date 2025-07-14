@@ -7,6 +7,7 @@ import { generateText } from '../utils/generateText'
 import { generateImage } from '../utils/generateImage'
 import { makePhaseTextPrompt } from '../utils/promptTemplates'
 import { makePhaseImagePrompt } from '../utils/promptTemplates'
+import MiniSquareButton from './MiniSquareButton'
 
 export default function PhaseCard({ phase }) {
   const { phases, setPhases } = useStore()
@@ -127,21 +128,13 @@ export default function PhaseCard({ phase }) {
           </div>
         )}
 
-        <button
-          onClick={handleAiEdit}
-          disabled={loading || imageLoading}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs"
-        >
+        <MiniSquareButton onClick={handleAiEdit} disabled={loading || imageLoading}>
           ✏️
-        </button>
+        </MiniSquareButton>
 
-        <button
-          onClick={handleAiImage}
-          disabled={loading || imageLoading}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs"
-        >
+        <MiniSquareButton onClick={handleAiImage} disabled={loading || imageLoading}>
           🖼️
-        </button>
+        </MiniSquareButton>
 
         <input
           id={`upload-${phase.id}`}
@@ -152,31 +145,25 @@ export default function PhaseCard({ phase }) {
         />
         <label
           htmlFor={`upload-${phase.id}`}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs cursor-pointer flex items-center justify-center"
+          className="w-8 h-8 text-xs font-medium text-gray-800 flex items-center justify-center hover:bg-gray-100 rounded transition-colors duration-150 disabled:opacity-50"
         >
           📁
         </label>
 
-        <button
-          onClick={() => setShowCanvas(!showCanvas)}
-          className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs"
-        >
+        <MiniSquareButton onClick={() => setShowCanvas(!showCanvas)}>
           🧑‍🎨
-        </button>
+        </MiniSquareButton>
 
         {showCanvas && (
-          <button
-            onClick={handleCanvasSave}
-            className="w-8 h-8 bg-green-100 border border-green-200 rounded-md shadow text-xs"
-          >
+          <MiniSquareButton onClick={handleCanvasSave} className="bg-green-100 border border-green-200">
             💾
-          </button>
+          </MiniSquareButton>
         )}
 
         <Link to={`/phase/${phase.id}/steps`}>
-          <button className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow text-xs">
+          <MiniSquareButton>
             📋
-          </button>
+          </MiniSquareButton>
         </Link>
       </div>
     </div>

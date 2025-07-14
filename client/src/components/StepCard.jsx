@@ -5,6 +5,7 @@ import { generateText } from '../utils/generateText'
 import { generateImage } from '../utils/generateImage'
 import { makeStepTextPrompt } from '../utils/promptTemplates'
 import { makeStepImagePrompt } from '../utils/promptTemplates'
+import MiniSquareButton from './MiniSquareButton'
 
 export default function StepCard({ step, onChange }) {
   const [isEditing, setIsEditing] = useState(false)
@@ -114,16 +115,36 @@ export default function StepCard({ step, onChange }) {
           </div>
         )}
 
-        <button onClick={handleAiEdit} disabled={isEditing || isGenerating} className="w-8 h-8 bg-blue-100 border rounded shadow text-xs">✏️</button>
-        <button onClick={handleAiImage} disabled={isEditing || isGenerating} className="w-8 h-8 bg-blue-100 border rounded shadow text-xs">🖼️</button>
+        <MiniSquareButton onClick={handleAiEdit} disabled={isEditing || isGenerating}>
+          ✏️
+        </MiniSquareButton>
 
-        <input id={`upload-${step.id}`} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-        <label htmlFor={`upload-${step.id}`} className="w-8 h-8 bg-blue-100 border rounded shadow text-xs cursor-pointer flex items-center justify-center">📁</label>
+        <MiniSquareButton onClick={handleAiImage} disabled={isEditing || isGenerating}>
+          🖼️
+        </MiniSquareButton>
 
-        <button onClick={() => setShowCanvas(!showCanvas)} className="w-8 h-8 bg-blue-100 border rounded shadow text-xs">🧑‍🎨</button>
+        <input
+          id={`upload-${step.id}`}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+        <label
+          htmlFor={`upload-${step.id}`}
+          className="w-8 h-8 text-xs font-medium text-gray-800 flex items-center justify-center hover:bg-gray-100 rounded transition-colors duration-150 disabled:opacity-50"
+        >
+          📁
+        </label>
+
+        <MiniSquareButton onClick={() => setShowCanvas(!showCanvas)}>
+          🧑‍🎨
+        </MiniSquareButton>
 
         {showCanvas && (
-          <button onClick={handleCanvasSave} className="w-8 h-8 bg-green-100 border rounded shadow text-xs">💾</button>
+          <MiniSquareButton onClick={handleCanvasSave} className="bg-green-100">
+            💾
+          </MiniSquareButton>
         )}
       </div>
     </div>

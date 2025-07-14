@@ -21,7 +21,7 @@ export default function Home() {
       
       <div className="flex justify-end items-center w-full pr-6 gap-2">
         <span className="text-sm text-gray-700 italic">{projectTitle}</span>
-        <div className="flex items-center gap-2 bg-sky-100 px-1 py-1 rounded-lg">
+        <div className="flex items-center gap-2 bg-white-100 px-1 py-1 rounded-lg">
           <button
             onClick={logout}
             className="px-2 py-0 bg-white-200 text-white rounded hover:bg-blue-400 transition"

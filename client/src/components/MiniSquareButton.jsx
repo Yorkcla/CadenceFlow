@@ -6,8 +6,8 @@ export default function MiniSquareButton({ children, onClick, disabled }) {
     <button
       onClick={onClick}
       disabled={disabled}
-      className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-md shadow hover:shadow-md transition-all duration-200 text-blue-900 text-xs font-medium flex items-center justify-center disabled:opacity-50"
-    >
+      className="w-8 h-8 text-xs font-medium text-gray-800 flex items-center justify-center hover:bg-gray-100 rounded transition-colors duration-150 disabled:opacity-50"
+      >
       {children}
     </button>
   )
