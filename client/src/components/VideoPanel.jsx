@@ -89,7 +89,7 @@ export default function VideoPanel({ asset }) {
           ▶️ 
         </MiniSquareButton>
         <MiniSquareButton onClick={handleGenerateVideo} disabled={loading}>
-          {loading ? '…' : '🎥'}
+          {loading ? '…' : '✨'}
         </MiniSquareButton>
       </div>
 

@@ -115,7 +115,7 @@ export default function SoundPhaseCard({
           </select>
 
           <div className="flex justify-end pt-1text-right flex items-center justify-end gap-2">
-            <MiniSquareButton onClick={handleGenerateSound}>🎵</MiniSquareButton>
+            <MiniSquareButton onClick={handleGenerateSound}>✨</MiniSquareButton>
           </div>
         </div>
       )}

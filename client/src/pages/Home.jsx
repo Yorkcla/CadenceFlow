@@ -20,7 +20,7 @@ export default function Home() {
     <div className="min-h-screen px-6 py-10 flex flex-col items-center">
       
       <div className="flex justify-end items-center w-full pr-6 gap-2">
-        <span className="text-sm text-gray-700 italic">{projectTitle}</span>
+        <span className="text-sm text-gray-700">{projectTitle}</span>
         <div className="flex items-center gap-2 bg-white-100 px-1 py-1 rounded-lg">
           <button
             onClick={logout}

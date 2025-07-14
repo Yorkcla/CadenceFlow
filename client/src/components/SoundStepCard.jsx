@@ -114,7 +114,7 @@ export default function SoundStepCard({
           </select>
 
           <div className="text-right flex items-center justify-end gap-2">
-            <MiniSquareButton onClick={handleGenerateSound}>🎵</MiniSquareButton>
+            <MiniSquareButton onClick={handleGenerateSound}>✨</MiniSquareButton>
           </div>
         </div>
       )}

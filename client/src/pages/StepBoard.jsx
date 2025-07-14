@@ -78,7 +78,6 @@ export default function StepBoard() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8">
-      <h2 className="text-2xl font-bold">Steps for Phase {phaseId}</h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {steps.map((step, index) => (

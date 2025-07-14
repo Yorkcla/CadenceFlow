@@ -93,7 +93,6 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
 
   return (
     <div className="border rounded-xl p-4 shadow w-64 bg-white mt-2 space-y-3">
-      <p className="text-sm font-semibold text-gray-800">Sound for {id}</p>
 
       <div>
         <label className="text-xs text-gray-500">Timbre</label>
@@ -178,7 +177,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
       </div>
 
       <div className="text-right flex items-center justify-end gap-2">
-        <MiniSquareButton onClick={handlePlay}>🔊</MiniSquareButton>
+        <MiniSquareButton onClick={handlePlay}>🎵</MiniSquareButton>
       </div>
     </div>
   )
