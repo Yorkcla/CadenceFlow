@@ -92,7 +92,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
   }
 
   return (
-    <div className="border rounded-xl p-4 shadow w-64 bg-white mt-2 space-y-3">
+    <div className="w-64 max-w-sm bg-white border rounded-xl shadow p-4 space-y-3 mt-2">
 
       <div>
         <label className="text-xs text-gray-500">Timbre</label>

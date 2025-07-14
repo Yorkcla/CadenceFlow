@@ -12,7 +12,7 @@ export default function Home() {
   const sections = [
     { title: 'Onboarding', path: '/onboarding' },
     { title: 'Storyboarding', path: '/storyboard' },
-    { title: 'Assigning Sounds', path: '/soundboard' },
+    { title: 'Sounding', path: '/soundboard' },
     { title: 'Reviewing', path: '/review' },
   ]
 

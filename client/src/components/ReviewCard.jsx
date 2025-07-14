@@ -29,7 +29,7 @@ export default function ReviewCard({ asset, onOpenVideo }) {
   }, [])
 
   return (
-    <div className="flex-shrink-0 w-[340px] bg-white border-2 border-blue-100 rounded-2xl shadow-lg p-5 space-y-4">
+    <div className="w-[340px] max-w-sm bg-white border rounded-xl shadow p-4 space-y-3">
       <div className="text-sm font-semibold text-gray-800">
         {asset.type === 'phase' ? 'Phase' : 'Step'}: {asset.title}
       </div>

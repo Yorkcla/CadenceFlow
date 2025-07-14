@@ -83,7 +83,7 @@ export default function StepCard({ step, onChange }) {
   }
 
   return (
-    <div className="bg-white border rounded-xl p-4 shadow space-y-3 w-72">
+    <div className="w-72 max-w-sm bg-white border rounded-xl shadow p-4 space-y-3">
       <input
         type="text"
         value={step.description}
