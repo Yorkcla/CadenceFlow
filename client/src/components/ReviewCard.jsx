@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import MiniSquareButton from './MiniSquareButton'
 
-export default function ReviewCard({ asset }) {
+export default function ReviewCard({ asset, onOpenVideo }) {
   const audioRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -48,8 +48,13 @@ export default function ReviewCard({ asset }) {
 
       <div className="text-right flex items-center justify-end gap-2">
         <MiniSquareButton onClick={handleToggleAudio}>
-        {isPlaying ? '⏸️' : '🔊'}
+          {isPlaying ? '⏸️' : '🔊'}
         </MiniSquareButton>
+
+        <MiniSquareButton onClick={() => onOpenVideo(asset)}>
+          🎬
+        </MiniSquareButton>
+
         <audio ref={audioRef} src={asset.soundUrl} preload="auto" />
       </div>
     </div>

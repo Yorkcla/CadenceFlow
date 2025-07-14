@@ -1,35 +1,36 @@
-// genai/videoService.js
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Modality } from '@google/genai';
 
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-/**
- * @param {object} opts {prompt, aspectRatio}
- * @returns {string} signed mp4 URL
- */
-export async function generateVideo(opts) {
-  // 1) 비디오 생성 요청
-  let operation = await genAI.models.generateVideos({
+export async function generateVideo({ prompt, aspectRatio = '16:9' }) {
+
+  if (typeof prompt !== 'string') {
+    throw new Error('prompt must be a plain string');
+  }
+
+  /** 1️⃣ 비디오 생성 요청 */
+  let op = await genAI.models.generateVideos({
     model: 'veo-2.0-generate-001',
-    prompt: opts.prompt,
+    prompt,
     config: {
-      aspectRatio: opts.aspectRatio,
-      personGeneration: 'dont_allow', // 필요 시 변경
+      aspectRatio,
       durationSeconds: 6,
+      personGeneration: 'dont_allow',
+      responseModalities: [Modality.VIDEO],
     },
   });
 
-  // 2) 폴링 (10초 간격)
-  while (!operation.done) {
+  /** 2️⃣ 폴링 */
+  while (!op.done) {
     await new Promise(r => setTimeout(r, 10_000));
-    operation = await genAI.operations.getVideosOperation({ operation });
+    op = await genAI.operations.getVideosOperation({ operation: op });
   }
 
-  // 3) 결과 URL 추출
-  const videoObj = operation.response?.generatedVideos?.[0];
-  if (!videoObj?.video?.uri) throw new Error('No video URI returned');
-  // 서명 URL에 API 키 붙이기
-  return `${videoObj.video.uri}&key=${process.env.GEMINI_API_KEY}`;
+  /** 3️⃣ 결과 URL */
+  const uri = op.response?.generatedVideos?.[0]?.video?.uri;
+  if (!uri) throw new Error('No video URI returned');
+  return `${uri}&key=${process.env.GEMINI_API_KEY}`;
 }
+
 
 

@@ -44,4 +44,18 @@ export const makeStepImagePrompt = (description) => {
 Use a flat design with clear actions and minimal background.`;
 }
 
+export function makeVideoPrompt({ title, description }) {
+  const prompt = `
+Create a 6-second cinematic video based on the following storyboard element:
+
+Title: "${title}"
+Description: "${description}"
+
+Visually interpret the story with cinematic style.
+Do not include text or narration.
+`.trim();
+
+  return String(prompt); // 여기서 string으로 강제 변환
+}
+
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useStore from '../store/useStore'
 import ReviewCard from '../components/ReviewCard'
+import VideoPanel from '../components/VideoPanel'
 import { loadFinalAssets, loadFinalAssetsByTitle } from '../utils/loadFinalAssets'
 import toast from 'react-hot-toast'
 import SquareButton from '../components/SquareButton'
@@ -9,7 +10,6 @@ import { saveAs } from 'file-saver'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../utils/firebase'
 
-// 🔄 Phase → 관련 Step → 다음 Phase 순 정렬 함수
 function sortByPhaseThenStep(assets) {
   const phases = assets.filter(a => a.type === 'phase')
   const steps = assets.filter(a => a.type === 'step')
@@ -36,7 +36,12 @@ export default function Review() {
   const [reviewGroups, setReviewGroups] = useState([])
   const [otherTitle, setOtherTitle] = useState('')
 
-  // 🔹 초기 프로젝트 로딩
+  // ✅ 추가: 비디오 패널 상태
+  const [openVideoAssetId, setOpenVideoAssetId] = useState(null)
+  const handleOpenVideo = (asset) => {
+    setOpenVideoAssetId(prev => (prev === asset.id ? null : asset.id))
+  }
+
   useEffect(() => {
     const fetchInitial = async () => {
       const data = await loadFinalAssets(userId, projectId)
@@ -46,7 +51,6 @@ export default function Review() {
     fetchInitial()
   }, [userId, projectId, projectTitle])
 
-  // 🔹 다른 프로젝트 불러오기
   const handleLoadOtherProject = async () => {
     if (!otherTitle) return
     const { data, projectId: otherId, projectTitle: fetchedTitle } = await loadFinalAssetsByTitle(userId, otherTitle)
@@ -66,7 +70,6 @@ export default function Review() {
     setOtherTitle('')
   }
 
-  // 🔹 프로젝트별 ZIP 다운로드
   const handleDownloadZip = async (targetProjectId) => {
     try {
       const snap = await getDocs(collection(db, 'users', userId, 'projects', targetProjectId, 'finalAssets'))
@@ -81,7 +84,6 @@ export default function Review() {
 
   return (
     <div className="w-screen min-h-screen p-10 space-y-12">
-      {/* 🔎 다른 프로젝트 입력 */}
       <div className="flex gap-2 items-center mb-4">
         <input
           type="text"
@@ -98,7 +100,6 @@ export default function Review() {
         </button>
       </div>
 
-      {/* 🧾 리뷰 카드 그룹 */}
       {reviewGroups.length === 0 ? (
         <div className="text-gray-500">No saved assets to review.</div>
       ) : (
@@ -107,10 +108,15 @@ export default function Review() {
             <h2 className="text-xl font-bold mb-3">{group.title}</h2>
             <div className="flex gap-6 overflow-x-auto flex-nowrap pb-4">
               {group.assets.map((asset, i) => (
-                <ReviewCard key={`${group.title}-${i}`} asset={asset} />
-              ))}
+                <div key={`${group.title}-${i}`}>
+                  <ReviewCard asset={asset} onOpenVideo={handleOpenVideo} />
 
-              {/* 📦 해당 프로젝트 저장 버튼 */}
+                  {/* ✅ 선택된 카드에만 VideoPanel 표시 */}
+                  {openVideoAssetId === asset.id && (
+                    <VideoPanel asset={asset} userId={userId} projectId={projectId} />
+                  )}
+                </div>
+              ))}
               <div className="flex flex-col gap-2 flex-shrink-0">
                 <SquareButton onClick={() => handleDownloadZip(group.projectId)}>
                   💾
