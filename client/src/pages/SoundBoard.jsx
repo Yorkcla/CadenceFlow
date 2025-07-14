@@ -211,7 +211,7 @@ export default function Soundboard() {
         ))}
 
         <div className="flex flex-col gap-2">
-          <SquareButton onClick={handleSaveSounds}>💾 Save</SquareButton>
+          <SquareButton onClick={handleSaveSounds}>💾</SquareButton>
         </div>
       </div>
     </div>
