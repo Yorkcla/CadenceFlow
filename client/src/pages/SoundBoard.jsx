@@ -94,39 +94,50 @@ export default function Soundboard() {
       toast.error('No cards selected')
       return
     }
-
+  
     const toastId = toast.loading('Saving sounds…')
-
+  
     try {
       await deleteAllFinalAssets(userId, projectId)
-
+  
       for (const key of selectedKeys) {
         const [type, id] = key.split('-')
         const config = soundConfig[id]
         if (!config) continue
-
-        const isPhase = type === 'phase'
-        const phase = isPhase
-          ? phases.find(p => String(p.id) === id)
-          : phases.find(p => (stepsByPhase[p.id] || []).some(s => String(s.id) === id))
-        const step = isPhase ? null
-          : (stepsByPhase[phase?.id] || []).find(s => String(s.id) === id)
-
-        const phaseId = phase?.id
-        const stepId = step?.id
-
+  
+        let phase = null
+        let step = null
+        let phaseId = null
+        let stepId = null
+  
+        if (type === 'phase') {
+          phase = phases.find(p => String(p.id) === id)
+          phaseId = phase?.id
+        } else if (type === 'step') {
+          const stepPhaseEntry = Object.entries(stepsByPhase).find(([pid, steps]) =>
+            steps.some(s => String(s.id) === id)
+          )
+          phaseId = stepPhaseEntry?.[0]
+          step = stepPhaseEntry?.[1].find(s => String(s.id) === id)
+          stepId = step?.id
+          phase = phases.find(p => String(p.id) === phaseId)
+        }
+  
+        if (!phaseId) continue // phaseId가 반드시 있어야 저장 가능
+  
         const isSample = config.instrument === 'Sample'
         const wavBlob = isSample ? null : await renderToneToWav(config)
         const soundUrl = isSample
           ? config.sampleUrl
           : await uploadSoundBlob(userId, projectId, phaseId, stepId, wavBlob)
-
+  
         await saveSoundConfig(userId, projectId, phaseId, stepId, config, soundUrl)
-
+  
         await saveFinalAsset(userId, projectId, {
           type,
           id,
           phaseId,
+          stepId,
           title: phase?.title || '',
           description: step?.description || phase?.description || '',
           imageUrl: step?.imageUrl || phase?.imageUrl || '',
@@ -134,7 +145,7 @@ export default function Soundboard() {
           soundUrl
         })
       }
-
+  
       await Tone.context.resume()
       toast.success('Sounds Saved')
     } catch (err) {
@@ -143,7 +154,7 @@ export default function Soundboard() {
     } finally {
       toast.dismiss(toastId)
     }
-  }
+  }  
 
   return (
     <div className="w-screen h-[calc(100vh-80px)] overflow-x-auto overflow-y-auto px-10 pb-40">

@@ -3,6 +3,11 @@ import useStore from '../store/useStore'
 import ReviewCard from '../components/ReviewCard'
 import { loadFinalAssets, loadFinalAssetsByTitle } from '../utils/loadFinalAssets'
 import toast from 'react-hot-toast'
+import SquareButton from '../components/SquareButton'
+import { createProjectZip } from '../utils/createProjectZip'
+import { saveAs } from 'file-saver'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '../utils/firebase'
 
 // 🔄 Phase → 관련 Step → 다음 Phase 순 정렬 함수
 function sortByPhaseThenStep(assets) {
@@ -36,7 +41,7 @@ export default function Review() {
     const fetchInitial = async () => {
       const data = await loadFinalAssets(userId, projectId)
       const sorted = sortByPhaseThenStep(data)
-      setReviewGroups([{ title: projectTitle, assets: sorted }])
+      setReviewGroups([{ title: projectTitle, assets: sorted, projectId }])
     }
     fetchInitial()
   }, [userId, projectId, projectTitle])
@@ -57,8 +62,21 @@ export default function Review() {
     }
 
     const sorted = sortByPhaseThenStep(data)
-    setReviewGroups(prev => [...prev, { title: fetchedTitle, assets: sorted }])
+    setReviewGroups(prev => [...prev, { title: fetchedTitle, assets: sorted, projectId: otherId }])
     setOtherTitle('')
+  }
+
+  // 🔹 프로젝트별 ZIP 다운로드
+  const handleDownloadZip = async (targetProjectId) => {
+    try {
+      const snap = await getDocs(collection(db, 'projects', targetProjectId, 'finalAssets'))
+      const assets = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      const zipBlob = await createProjectZip(targetProjectId, assets)
+      saveAs(zipBlob, `project-${targetProjectId}.zip`)
+    } catch (err) {
+      console.error(err)
+      alert('❗️ 다운로드 중 오류가 발생했습니다.')
+    }
   }
 
   return (
@@ -91,6 +109,13 @@ export default function Review() {
               {group.assets.map((asset, i) => (
                 <ReviewCard key={`${group.title}-${i}`} asset={asset} />
               ))}
+
+              {/* 📦 해당 프로젝트 저장 버튼 */}
+              <div className="flex flex-col gap-2 flex-shrink-0">
+                <SquareButton onClick={() => handleDownloadZip(group.projectId)}>
+                  📦
+                </SquareButton>
+              </div>
             </div>
           </div>
         ))
@@ -98,6 +123,8 @@ export default function Review() {
     </div>
   )
 }
+
+
 
 
 

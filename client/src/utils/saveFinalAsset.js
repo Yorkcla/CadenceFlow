@@ -8,6 +8,12 @@ export async function saveFinalAsset(userId, projectId, data) {
   const safeType = String(data.type).trim()
   const docId = `${safeType}-${safeId}`
 
+  console.log('💾 Saving Final Asset...')
+  console.log('ID:', data.id)
+  console.log('Type:', data.type)
+  console.log('Phase ID:', data.phaseId)
+  console.log('Step ID:', data.stepId)
+
   const ref = doc(db, 'users', userId, 'projects', projectId, 'finalAssets', docId)
   await setDoc(ref, { ...data, timestamp: Date.now() }, { merge: true })
 }
