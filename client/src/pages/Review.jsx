@@ -5,6 +5,7 @@ import VideoPanel from '../components/VideoPanel'
 import { loadFinalAssets, loadFinalAssetsByTitle } from '../utils/loadFinalAssets'
 import toast from 'react-hot-toast'
 import SquareButton from '../components/SquareButton'
+import MiniSquareButton from '../components/MiniSquareButton'
 import { createProjectZip } from '../utils/createProjectZip'
 import { saveAs } from 'file-saver'
 import { collection, getDocs } from 'firebase/firestore'
@@ -91,17 +92,14 @@ export default function Review() {
       <div className="flex gap-2 items-center mb-4">
         <input
           type="text"
-          placeholder="Enter another project title"
+          placeholder="Project title"
           value={otherTitle}
           onChange={(e) => setOtherTitle(e.target.value)}
-          className="border rounded px-3 py-1"
+          className="placeholder:text-xs border rounded px-3 py-1"
         />
-        <button
-          onClick={handleLoadOtherProject}
-          className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-        >
-          Load Project
-        </button>
+        <MiniSquareButton onClick={handleLoadOtherProject}>
+          📂
+        </MiniSquareButton>
       </div>
 
       {reviewGroups.length === 0 ? (

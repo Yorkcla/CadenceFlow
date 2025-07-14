@@ -123,7 +123,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
                     key={i}
                     type="text"
                     placeholder={field === 'pitch' ? `c${i + 2}` : '0'}
-                    className="border rounded p-1 w-12 text-sm"
+                    className="placeholder:text-xs border rounded p-1 w-12 text-sm"
                     value={config[field]?.[i] || ''}
                     onChange={e => handleArrayUpdate(field, i, e.target.value)}
                   />
@@ -151,7 +151,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
         <input
           type="text"
           placeholder="-6"
-          className="border rounded p-1 w-full text-sm"
+          className="placeholder:text-xs border rounded p-1 w-full text-sm"
           value={config.volume || ''}
           onChange={e => onUpdate(id, 'volume', e.target.value)}
         />

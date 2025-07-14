@@ -89,7 +89,7 @@ export default function StepCard({ step, onChange }) {
         value={step.description}
         onChange={(e) => handleChange('description', e.target.value)}
         placeholder="Step description"
-        className="text-sm w-full border-b border-gray-300 pb-1 focus:outline-none"
+        className="text-sm placeholder:text-xs w-full border-b border-gray-300 pb-1 focus:outline-none"
       />
 
       <div className="relative w-full h-40 border bg-gray-100 rounded overflow-hidden">

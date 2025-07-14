@@ -91,13 +91,13 @@ export default function PhaseCard({ phase }) {
         value={phase.title}
         onChange={(e) => handleChange('title', e.target.value)}
         placeholder="Phase title"
-        className="text-lg font-semibold w-full border-b border-gray-300 pb-1 focus:outline-none"
+        className="text-lg placeholder:text-xs font-semibold w-full border-b border-gray-300 pb-1 focus:outline-none"
       />
       <textarea
         value={phase.description}
         onChange={(e) => handleChange('description', e.target.value)}
         placeholder="Add description..."
-        className="w-full text-sm text-gray-700 border border-gray-200 rounded p-2 focus:outline-none resize-none"
+        className="w-full text-sm placeholder:text-xs text-gray-700 border border-gray-200 rounded p-2 focus:outline-none resize-none"
         rows={3}
       />
 
