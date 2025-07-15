@@ -151,9 +151,9 @@ export default function Soundboard() {
   }
   
   return (
-    <div className="w-screen h-[calc(100vh-80px)] overflow-x-auto overflow-y-auto px-10 pb-40">
+    <div className="px-6 py-10 max-w-6xl mx-auto space-y-6">
 
-      <div className="flex gap-10 items-start min-w-fit p-10">
+      <div className="flex gap-10 items-start overflow-x-auto pb-40">
         {phases.map(phase => (
           <React.Fragment key={phase.id}>
             <div>

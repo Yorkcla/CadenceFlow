@@ -85,7 +85,7 @@ export default function Review() {
   }
 
   return (
-    <div className="w-screen min-h-screen p-10 space-y-12">
+    <div className="px-6 py-10 max-w-6xl mx-auto space-y-12">
       <div className="flex gap-2 items-center mb-4">
         <input
           type="text"
@@ -105,27 +105,30 @@ export default function Review() {
         reviewGroups.map((group, idx) => (
           <div key={idx}>
             <h2 className="text-xl font-bold mb-3">{group.title}</h2>
-            <div className="flex gap-6 overflow-x-auto flex-nowrap pb-4">
-              {group.assets.map((asset, i) => (
-                <div key={`${group.title}-${i}`}>
-                  <ReviewCard
-                    asset={asset}
-                    onOpenVideo={() => toggleVideoPanel(asset.id)} // changed
-                  />
 
-                  {openVideoAssetIds[asset.id] && (               // changed
-                    <VideoPanel
+            <div className="overflow-x-auto">
+              <div className="flex gap-6 min-w-fit items-start pb-4">
+                {group.assets.map((asset, i) => (
+                  <div key={`${group.title}-${i}`}>
+                    <ReviewCard
                       asset={asset}
-                      userId={userId}
-                      projectId={group.projectId}
+                      onOpenVideo={() => toggleVideoPanel(asset.id)}
                     />
-                  )}
+
+                    {openVideoAssetIds[asset.id] && (               
+                      <VideoPanel
+                        asset={asset}
+                        userId={userId}
+                        projectId={group.projectId}
+                      />
+                    )}
+                  </div>
+                ))}
+                <div className="flex flex-col gap-2 flex-shrink-0">
+                  <SquareButton onClick={() => handleDownloadZip(group.projectId)}>
+                    💾
+                  </SquareButton>
                 </div>
-              ))}
-              <div className="flex flex-col gap-2 flex-shrink-0">
-                <SquareButton onClick={() => handleDownloadZip(group.projectId)}>
-                  💾
-                </SquareButton>
               </div>
             </div>
           </div>
