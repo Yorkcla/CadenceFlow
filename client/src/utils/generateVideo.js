@@ -2,7 +2,9 @@ export async function generateVideo(prompt) {
     const res = await fetch('http://localhost:3000/api/video', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ 
+        prompt: String(prompt), 
+      }),
     })
   
     if (!res.ok) {
