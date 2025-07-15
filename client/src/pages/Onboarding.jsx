@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import useStore from '../store/useStore'
 import PageJoyride from '../components/PageJoyride'
 import ProjectNameModal from '../components/ProjectNameModal'
-import SquareButton from '../components/SquareButton'
+import MiniSquareButton from '../components/MiniSquareButton'
 
 export default function Onboarding() {
   const navigate = useNavigate()
@@ -44,15 +44,27 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="p-6">
-      <PageJoyride />
-      <div data-tour="intro" className="text-2xl font-bold mb-4">CadenceFlow 투어를 시작해볼까요?</div>
+  <div className="flex flex-col items-center p-6 space-y-6 text-center mt-12">
+    <PageJoyride />
 
-      {showProjectModal && (
-        <ProjectNameModal onSubmit={handleProjectNameSubmit} />
-      )}
+    <div data-tour="intro" className="text-3xl font-bold text-gray-800">
+      CadenceFlow: Designing Sonic Interactions with Musical Tension and Release
     </div>
-  )
+
+    <p className="text-gray-600 text-lg max-w-2xl">
+      CadenceFlow helps you design interactive experiences by assigning meaningful sound cues using musical tension and release. 
+      From visual storyboarding to expressive audio mapping, this tool supports your creative process step by step.
+    </p>
+
+    <p className="text-gray-500 text-base">
+      Click the red button to start the onboarding tour and explore how it all works!
+    </p>
+
+    {showProjectModal && (
+      <ProjectNameModal onSubmit={handleProjectNameSubmit} />
+    )}
+  </div>
+)
 }
 
 
