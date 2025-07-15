@@ -7,6 +7,7 @@ import { uploadStepImageToStorage } from '../utils/uploadImageToStorage'
 import { saveStepsToFirestore } from '../utils/saveSteps'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'  
+import PageJoyride from '../components/PageJoyride'
 
 export default function StepBoard() {
   const { phaseId } = useParams()
@@ -78,7 +79,7 @@ export default function StepBoard() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8">
-
+      <PageJoyride />
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {steps.map((step, index) => (
           <StepCard

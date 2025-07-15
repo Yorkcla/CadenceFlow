@@ -12,6 +12,7 @@ import { saveSoundConfig } from '../utils/saveSoundConfig'
 import { saveFinalAsset, deleteAllFinalAssets } from '../utils/saveFinalAsset'
 import toast from 'react-hot-toast'
 import * as Tone from 'tone'
+import PageJoyride from '../components/PageJoyride'
 
 // SessionStorage 키
 const SESSION_SELECTED_KEY = 'soundboard-selected'
@@ -158,6 +159,7 @@ export default function Soundboard() {
 
   return (
     <div className="w-screen h-[calc(100vh-80px)] overflow-x-auto overflow-y-auto px-10 pb-40">
+      <PageJoyride />
       <div className="flex gap-10 items-start min-w-fit p-10">
         {phases.map(phase => (
           <React.Fragment key={phase.id}>

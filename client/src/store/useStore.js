@@ -1,6 +1,15 @@
 import { create } from 'zustand'
 
 const useStore = create((set) => ({
+
+  tourRun: false,
+  tourStepIndex: 0,
+  tourSteps: [],
+
+  startTour: (steps) => set({ tourRun: true, tourStepIndex: 0, tourSteps: steps }),
+  nextTourStep: () => set((state) => ({ tourStepIndex: state.tourStepIndex + 1 })),
+  stopTour: () => set({ tourRun: false, tourStepIndex: 0 }),
+
   // 사용자/프로젝트 정보
   userId: '',
   projectId: '',

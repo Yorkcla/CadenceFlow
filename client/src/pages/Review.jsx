@@ -10,6 +10,7 @@ import { createProjectZip } from '../utils/createProjectZip'
 import { saveAs } from 'file-saver'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../utils/firebase'
+import PageJoyride from '../components/PageJoyride'
 
 function sortByPhaseThenStep(assets) {
   const phases = assets.filter(a => a.type === 'phase')
@@ -89,6 +90,7 @@ export default function Review() {
 
   return (
     <div className="w-screen min-h-screen p-10 space-y-12">
+      <PageJoyride />
       <div className="flex gap-2 items-center mb-4">
         <input
           type="text"

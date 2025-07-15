@@ -8,6 +8,7 @@ import { savePhasesToFirestore } from '../utils/savePhases'
 import { uploadPhaseImageToStorage } from '../utils/uploadImageToStorage'
 import { cleanRemovedPhases } from '../utils/cleanupPhases'
 import toast from 'react-hot-toast'
+import PageJoyride from '../components/PageJoyride'
 
 export default function Storyboard() {
   const {
@@ -15,30 +16,12 @@ export default function Storyboard() {
     addPhase,
     setPhases,
     projectId,
-    setProjectId,
     userId,
     projectTitle,
-    setProjectTitle,
-    showProjectModal,
-    setShowProjectModal,
   } = useStore()
 
   const initializedRef = useRef(false)
   const canvasRefs = useRef({})  // ✅ 캔버스 ref 저장용
-
-  // 처음 진입 시 모달 자동 열기
-  useEffect(() => {
-    if (!projectId) {
-      setShowProjectModal(true)
-    }
-  }, [projectId, setShowProjectModal])
-
-  const handleProjectNameSubmit = (name) => {
-    const uniqueProjectId = `${userId || 'guest'}-${name}`
-    setProjectId(uniqueProjectId)
-    setProjectTitle(name)
-    setShowProjectModal(false)
-  }
 
   useEffect(() => {
     if (!initializedRef.current && phases.length === 0 && projectId) {
@@ -99,7 +82,7 @@ export default function Storyboard() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
-      {showProjectModal && <ProjectNameModal onSubmit={handleProjectNameSubmit} />}
+      <PageJoyride />
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {phases.map((phase) => (
