@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply font-sans; /* 여기서 Pacifico가 기본 sans로 적용됨 */
+}
