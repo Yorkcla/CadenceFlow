@@ -156,7 +156,7 @@ export default function Soundboard() {
       toast.dismiss(toastId)
     }
   }  
-
+  
   return (
     <div className="w-screen h-[calc(100vh-80px)] overflow-x-auto overflow-y-auto px-10 pb-40">
       <PageJoyride />

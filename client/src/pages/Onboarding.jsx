@@ -48,12 +48,6 @@ export default function Onboarding() {
       <PageJoyride />
       <div data-tour="intro" className="text-2xl font-bold mb-4">CadenceFlow 투어를 시작해볼까요?</div>
 
-      {!projectId && !showProjectModal && (
-        <SquareButton onClick={() => setShowProjectModal(true)}>
-          새 프로젝트 시작
-        </SquareButton>
-      )}
-
       {showProjectModal && (
         <ProjectNameModal onSubmit={handleProjectNameSubmit} />
       )}
