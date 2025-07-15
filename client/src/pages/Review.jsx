@@ -10,7 +10,6 @@ import { createProjectZip } from '../utils/createProjectZip'
 import { saveAs } from 'file-saver'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../utils/firebase'
-import PageJoyride from '../components/PageJoyride'
 
 function sortByPhaseThenStep(assets) {
   const phases = assets.filter(a => a.type === 'phase')
@@ -37,16 +36,13 @@ export default function Review() {
   const { userId, projectId, projectTitle } = useStore()
   const [reviewGroups, setReviewGroups] = useState([])
   const [otherTitle, setOtherTitle] = useState('')
+  const [openVideoAssetIds, setOpenVideoAssetIds] = useState({})
 
-  // 여러 패널 열기용 map (id => true/false) // changed
-  const [openVideoAssetIds, setOpenVideoAssetIds] = useState({}) // changed
-
-  // id별 열-닫기 토글 // changed
-  const toggleVideoPanel = (assetId) => {                         // changed
-    setOpenVideoAssetIds(prev => ({                               // changed
-      ...prev, [assetId]: !prev[assetId]                          // changed
-    }))                                                           // changed
-  }                                                               // changed
+  const toggleVideoPanel = (assetId) => {                         
+    setOpenVideoAssetIds(prev => ({                              
+      ...prev, [assetId]: !prev[assetId]                          
+    }))                                                           
+  }                                                               
 
   useEffect(() => {
     const fetchInitial = async () => {
@@ -90,7 +86,6 @@ export default function Review() {
 
   return (
     <div className="w-screen min-h-screen p-10 space-y-12">
-      <PageJoyride />
       <div className="flex gap-2 items-center mb-4">
         <input
           type="text"

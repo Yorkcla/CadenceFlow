@@ -12,9 +12,7 @@ import { saveSoundConfig } from '../utils/saveSoundConfig'
 import { saveFinalAsset, deleteAllFinalAssets } from '../utils/saveFinalAsset'
 import toast from 'react-hot-toast'
 import * as Tone from 'tone'
-import PageJoyride from '../components/PageJoyride'
 
-// SessionStorage 키
 const SESSION_SELECTED_KEY = 'soundboard-selected'
 const SESSION_CONFIG_KEY = 'soundboard-config'
 
@@ -23,23 +21,19 @@ export default function Soundboard() {
   const [phases, setPhases] = useState([])
   const [stepsByPhase, setStepsByPhase] = useState({})
 
-  // ✅ 세션스토리지에서 초기값 복원
   const initialSelected = JSON.parse(sessionStorage.getItem(SESSION_SELECTED_KEY) || '{}')
   const initialConfig = JSON.parse(sessionStorage.getItem(SESSION_CONFIG_KEY) || '{}')
   const [selected, setSelected] = useState(initialSelected)
   const [soundConfig, setSoundConfig] = useState(initialConfig)
 
-  // ✅ selected 변경될 때 저장
   useEffect(() => {
     sessionStorage.setItem(SESSION_SELECTED_KEY, JSON.stringify(selected))
   }, [selected])
 
-  // ✅ soundConfig 변경될 때 저장
   useEffect(() => {
     sessionStorage.setItem(SESSION_CONFIG_KEY, JSON.stringify(soundConfig))
   }, [soundConfig])
 
-  // Phase 불러오기
   useEffect(() => {
     const fetchPhases = async () => {
       if (!userId || !projectId) return
@@ -50,7 +44,6 @@ export default function Soundboard() {
     fetchPhases()
   }, [userId, projectId])
 
-  // Steps 불러오기
   useEffect(() => {
     const fetchSteps = async () => {
       if (!userId || !projectId || phases.length === 0) return
@@ -124,7 +117,7 @@ export default function Soundboard() {
           phase = phases.find(p => String(p.id) === phaseId)
         }
   
-        if (!phaseId) continue // phaseId가 반드시 있어야 저장 가능
+        if (!phaseId) continue
   
         const isSample = config.instrument === 'Sample'
         const wavBlob = isSample ? null : await renderToneToWav(config)
@@ -155,11 +148,11 @@ export default function Soundboard() {
     } finally {
       toast.dismiss(toastId)
     }
-  }  
+  }
   
   return (
     <div className="w-screen h-[calc(100vh-80px)] overflow-x-auto overflow-y-auto px-10 pb-40">
-      <PageJoyride />
+
       <div className="flex gap-10 items-start min-w-fit p-10">
         {phases.map(phase => (
           <React.Fragment key={phase.id}>

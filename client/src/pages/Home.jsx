@@ -34,7 +34,6 @@ export default function Home() {
       <div className="w-full max-w-md mb-8 text-center">
         <h1 className="text-2xl font-black font-lato bg-gradient-to-r from-emerald-900 to-cyan-100 bg-clip-text text-transparent">CadenceFlow</h1>
       </div>
-      {/* 가운데 박스 정사각형 4개 */}
       <div className="grid grid-cols-2 gap-10">
         {sections.map((section, index) => (
           <Link

@@ -1,12 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStore from '../store/useStore'
-import PageJoyride from '../components/PageJoyride'
 import ProjectNameModal from '../components/ProjectNameModal'
-import MiniSquareButton from '../components/MiniSquareButton'
 
 export default function Onboarding() {
-  const navigate = useNavigate()
   const {
     userId,
     projectId,
@@ -14,50 +11,39 @@ export default function Onboarding() {
     setProjectTitle,
     showProjectModal,
     setShowProjectModal,
-    startTour,
   } = useStore()
 
-  const [tempName, setTempName] = useState('')
-
-  const steps = [
-    { target: '[data-tour="intro"]', content: 'CadenceFlow에 오신 걸 환영합니다!' },
-    { target: '[data-tour="add-phase-button"]', content: '스토리보드 단계를 여기에 추가하세요.' },
-    { target: '[data-tour="sound-panel"]', content: '사운드를 배치하고 조절할 수 있어요.' },
-    { target: '[data-tour="review-button"]', content: '완성된 결과를 여기서 확인해요.' },
-  ]
-
-  useEffect(() => {
-    if (!projectId) {
-      setShowProjectModal(true)
-    } else {
-      startTour(steps) // 프로젝트가 이미 설정되어 있으면 Joyride만 실행
-    }
-  }, [])
+  const navigate = useNavigate()
 
   const handleProjectNameSubmit = (name) => {
     const uniqueId = `${userId || 'guest'}-${name}`
     setProjectId(uniqueId)
     setProjectTitle(name)
     setShowProjectModal(false)
-    startTour(steps)
     navigate('/onboarding')
   }
 
+  useEffect(() => {
+    if (!projectId) {
+      setShowProjectModal(true)
+    }
+  }, [projectId, setShowProjectModal])
+
   return (
   <div className="flex flex-col items-center p-6 space-y-6 text-center mt-12">
-    <PageJoyride />
 
-    <div data-tour="intro" className="text-3xl font-bold text-gray-800">
-      CadenceFlow: Designing Sonic Interactions with Musical Tension and Release
+    <div className="text-2xl font-bold text-gray-800">
+      CadenceFlow: Sonic Interactions with Musical Tension and Release
     </div>
 
-    <p className="text-gray-600 text-lg max-w-2xl">
-      CadenceFlow helps you design interactive experiences by assigning meaningful sound cues using musical tension and release. 
-      From visual storyboarding to expressive audio mapping, this tool supports your creative process step by step.
+    <p className="text-gray-600 text-base max-w-2xl">
+    CadenceFlow helps you design interactive experiences by assigning sound cues using musical tension and release. From visual storyboarding to audio mapping, this tool supports your creative process step by step.
+    It consists of three key stages: Storyboarding (where you define task situations requiring sound), Sounding (where you assign appropriate sounds to key moments), and Reviewing (where you preview and compare final designs).
+    With integrated text, image, and video generation powered by GenAI, CadenceFlow enables accessible and streamlined design exploration for non-experts.
     </p>
 
-    <p className="text-gray-500 text-base">
-      Click the red button to start the onboarding tour and explore how it all works!
+    <p className="text-sky-500 font-bold text-sm">
+      Click the black button to start the onboarding tour and explore how it all works!
     </p>
 
     {showProjectModal && (

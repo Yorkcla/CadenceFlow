@@ -10,7 +10,7 @@ export default function ProjectNameModal({ onSubmit }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-80 space-y-4 shadow-lg">
         <h2 className="text-lg font-bold">New Project</h2>
         <input

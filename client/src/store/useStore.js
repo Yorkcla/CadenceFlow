@@ -1,16 +1,7 @@
 import { create } from 'zustand'
 
 const useStore = create((set) => ({
-
-  tourRun: false,
-  tourStepIndex: 0,
-  tourSteps: [],
-
-  startTour: (steps) => set({ tourRun: true, tourStepIndex: 0, tourSteps: steps }),
-  nextTourStep: () => set((state) => ({ tourStepIndex: state.tourStepIndex + 1 })),
-  stopTour: () => set({ tourRun: false, tourStepIndex: 0 }),
-
-  // 사용자/프로젝트 정보
+  
   userId: '',
   projectId: '',
   projectTitle: '',
@@ -18,17 +9,14 @@ const useStore = create((set) => ({
   setProjectId: (id) => set({ projectId: id }),
   setProjectTitle: (title) => set({ projectTitle: title }),
 
-  // 🔽 프로젝트 이름 변경 모달 상태 추가
   showProjectModal: false,
   setShowProjectModal: (value) => set({ showProjectModal: value }),
 
-  // Phase 관련 상태
   phases: [],
   addPhase: (phase) =>
     set((state) => ({ phases: [...state.phases, phase] })),
   setPhases: (newPhases) => set({ phases: newPhases }),
 
-  // Steps를 Phase별로 관리
   stepsByPhase: {},
 
   setSteps: (phaseId, steps) =>

@@ -18,7 +18,7 @@ export default function Navbar() {
         <NavLink
           to="/onboarding"
           className={({ isActive }) =>
-            isActive ? "text-emerald-500 font-semibold" : "text-gray-500"
+            isActive ? "text-emerald-300 font-semibold" : "text-gray-500"
           }
         >
           Onboarding
@@ -26,7 +26,7 @@ export default function Navbar() {
         <NavLink
           to="/storyboard"
           className={({ isActive }) =>
-            isActive ? "text-emerald-500 font-semibold" : "text-gray-500"
+            isActive ? "text-emerald-300 font-semibold" : "text-gray-500"
           }
         >
           Storyboarding
@@ -34,7 +34,7 @@ export default function Navbar() {
         <NavLink
           to="/soundboard"
           className={({ isActive }) =>
-            isActive ? "text-emerald-500 font-semibold" : "text-gray-500"
+            isActive ? "text-emerald-300 font-semibold" : "text-gray-500"
           }
         >
           Sounding
@@ -42,7 +42,7 @@ export default function Navbar() {
         <NavLink
           to="/review"
           className={({ isActive }) =>
-            isActive ? "text-emerald-500 font-semibold" : "text-gray-500"
+            isActive ? "text-emerald-300 font-semibold" : "text-gray-500"
           }
         >
           Reviewing
