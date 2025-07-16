@@ -3,11 +3,13 @@ import { NavLink } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import useStore from '../store/useStore'
 import MiniSquareButton from './MiniSquareButton'
+import { useNavigate } from 'react-router-dom'
 
 export default function Navbar() {
   const { logout } = useAuth()
   const setShowProjectModal = useStore((state) => state.setShowProjectModal)
   const projectTitle = useStore((state) => state.projectTitle)
+  const navigate = useNavigate()
 
   return (
     <nav className="bg-white text-gray-900 px-6 py-4 shadow border-b flex justify-between items-center">
@@ -52,7 +54,7 @@ export default function Navbar() {
       {/* 버튼 묶음 */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-gray-700">{projectTitle}</span>
-          <MiniSquareButton onClick={() => setShowProjectModal(true)}>
+          <MiniSquareButton onClick={() => navigate('/onboarding', { state: { forceModal: true } })}>
             ➕
           </MiniSquareButton>
           <MiniSquareButton onClick={logout}>

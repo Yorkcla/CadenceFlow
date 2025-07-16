@@ -12,9 +12,9 @@ export default function VideoPanel({ asset }) {
   const [delaySec, setDelaySec] = useState(0)
 
   const handleGenerateVideo = async () => {
-    if (!asset?.title || !asset?.description || !asset?.imageUrl) {
-      toast.error('📄 타이틀, 설명, 이미지가 모두 필요합니다')
-      return
+    if (!asset?.description) {
+      toast.error('📄 설명이 필요합니다');
+      return;
     }
 
     setLoading(true)

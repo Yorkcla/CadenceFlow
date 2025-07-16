@@ -1,9 +1,9 @@
 export function makePhaseTextPrompt(userInput) {
-  return `다음 상황 묘사 구체적이지만 명확하게 바꿔줘:\n"${userInput}"`;
+  return `Rewrite this storyboard phase to summarize the tasks in one concise sentence:\n"${userInput}"`;
 }
 
 export function makeStepTextPrompt(userInput) {
-  return `다음 상황 묘사 구체적이지만 명확하게 바꿔줘:\n"${userInput}"`;
+  return `Rewrite this storyboard step to clearly describe a specific task in one concise sentence:\n"${userInput}"`;
 }
 
 export function makeSoundDesignPrompt(config) {
@@ -15,13 +15,14 @@ Given the following user context:
 - Interaction intent: ${interactionIntent}
 - Level of urgency: ${urgency}
 
-Generate a JSON object describing a short sound composed of multiple notes. Each note should have:
-- pitch: in scientific pitch notation (e.g., "c3", "d#4", "g5")
-- rhythm: when the note starts (e.g., 0, 0.5, 1.2)
-- duration: how long the note lasts (e.g., 0.1, 0.5, 1)
-Also include a master volume level (in dB), which defaults to -6 and should not exceed 0 dB.
+Generate a JSON object describing a short sound composed of up to 4 notes. Each note should include:
+- pitch: scientific pitch notation (e.g., "c3", "d#4", "g5")
+- rhythm: the start time in seconds (e.g., 0, 0.5, 1.2)
+- duration: how long the note lasts in seconds (e.g., 0.1, 0.5, 1)
 
-Output format (as valid JSON):
+Also include a master volume level in decibels (default: -6 dB, max: 0 dB).
+
+Output format:
 {
   "notes": [
     { "pitch": "c3", "rhythm": 0, "duration": 1 },
@@ -30,32 +31,30 @@ Output format (as valid JSON):
   ],
   "volume": -6
 }
-Return only the JSON. Do not include explanations or extra text.
-  `.trim();
+
+Only return a valid JSON object. Do not include explanations or any extra text.
+`.trim();
 }
 
 export const makePhaseImagePrompt = (description) => {
-  return `Create a storyboard-style image showing: "${description}". 
-Use a clean layout with soft colors, focusing on the user interaction described.`;
+  return `Create a storyboard phase image that visually represents an overview of tasks: "${description}".`;
 }
 
 export const makeStepImagePrompt = (description) => {
-  return `Illustrate the following moment: "${description}". 
-Use a flat design with clear actions and minimal background.`;
+  return `Create a storyboard step image that visually represents a specific task: "${description}".`;
 }
 
 export function makeVideoPrompt({ title, description }) {
   const prompt = `
 Create a 6-second cinematic video based on the following storyboard element:
 
-Title: "${title}"
-Description: "${description}"
+${title ? `Title: "${title}"\n` : ''}Description: "${description}" 
 
 Visually interpret the story with cinematic style.
 Do not include text or narration.
 `.trim();
 
-  return String(prompt); // 여기서 string으로 강제 변환
+  return String(prompt); 
 }
 
 

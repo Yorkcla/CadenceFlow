@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import useStore from '../store/useStore'
 import ProjectNameModal from '../components/ProjectNameModal'
 
@@ -14,6 +15,8 @@ export default function Onboarding() {
   } = useStore()
 
   const navigate = useNavigate()
+  const location = useLocation()
+  const forceModal = location.state?.forceModal === true
 
   const handleProjectNameSubmit = (name) => {
     const uniqueId = `${userId || 'guest'}-${name}`
@@ -24,10 +27,14 @@ export default function Onboarding() {
   }
 
   useEffect(() => {
-    if (!projectId) {
-      setShowProjectModal(true)
-    }
-  }, [projectId, setShowProjectModal])
+  if (!projectId && !showProjectModal) {
+    setShowProjectModal(true)
+  }
+
+  if (forceModal) {
+    setShowProjectModal(true)
+  }
+  }, [projectId, forceModal, showProjectModal, setShowProjectModal])
 
   return (
   <div className="flex flex-col items-center p-6 space-y-6 text-center mt-12">
