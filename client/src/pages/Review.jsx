@@ -58,12 +58,12 @@ export default function Review() {
     const { data, projectId: otherId, projectTitle: fetchedTitle } = await loadFinalAssetsByTitle(userId, otherTitle)
 
     if (!data || data.length === 0) {
-      toast.error('No assets found for that project.')
+      toast.error('No assets found for that project!')
       return
     }
 
     if (reviewGroups.some(group => group.title === fetchedTitle)) {
-      toast('Already loaded.')
+      toast('Already loaded!')
       return
     }
 

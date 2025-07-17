@@ -13,12 +13,12 @@ export default function VideoPanel({ asset }) {
 
   const handleGenerateVideo = async () => {
     if (!asset?.description) {
-      toast.error('📄 설명이 필요합니다');
+      toast.error('Please fill in the details first!');
       return;
     }
 
     setLoading(true)
-    const toastId = toast.loading('🎬 비디오 생성 중...')
+    const toastId = toast.loading('Generating...')
 
     try {
       const prompt = makeVideoPrompt({
@@ -29,10 +29,10 @@ export default function VideoPanel({ asset }) {
 
       const url = await generateVideo({ prompt, aspectRatio: '16:9' })
       setVideoUrl(url)
-      toast.success('✅ 비디오 생성 완료')
+      toast.success('Video generated!')
     } catch (err) {
       console.error(err)
-      toast.error('❌ 비디오 생성 실패')
+      toast.error('Video generation failed!')
     } finally {
       toast.dismiss(toastId)
       setLoading(false)

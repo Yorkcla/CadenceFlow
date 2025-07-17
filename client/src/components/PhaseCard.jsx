@@ -26,7 +26,7 @@ export default function PhaseCard({ phase }) {
 
   const handleAiEdit = async () => {
     if (!phase.description?.trim()) {
-      toast.error('먼저 내용을 입력해 주세요!')
+      toast.error('Please fill in the details first!')
       return
     }
 
@@ -36,14 +36,14 @@ export default function PhaseCard({ phase }) {
       const result = await generateText(prompt)
       handleChange('description', result)
     } catch (err) {
-      toast.error(err.message || '텍스트 생성 실패')
+      toast.error(err.message || 'Text generation failed!')
     }
     setLoading(false)
   }
 
   const handleAiImage = async () => {
     if (!phase.description?.trim()) {
-      toast.error('먼저 설명을 입력해 주세요!')
+      toast.error('Please fill in the details first!')
       return
     }
 
@@ -60,7 +60,7 @@ export default function PhaseCard({ phase }) {
       setImageUrl(localUrl)
       handleChange('imageUrl', localUrl)
     } catch (err) {
-      toast.error(err.message || '이미지 생성 실패')
+      toast.error(err.message || 'Image generation failed!')
     }
     setImageLoading(false)
   }
@@ -80,7 +80,7 @@ export default function PhaseCard({ phase }) {
       const url = URL.createObjectURL(blob)
       setImageUrl(url)
       handleChange('imageUrl', url)
-      toast.success('Canvas Saved')
+      toast.success('Canvas Saved!')
     }
   }
 

@@ -101,14 +101,13 @@ export default function Soundboard() {
       .filter(({ pitch }) => pitch.length > 0)
 
     if (!validPitches.some(({ pitch }) => pitch.length > 0)) {
-      toast.error('No valid pitch data found.')
+      toast.error('No valid pitch data found!')
       return
     }
 
-    toast.loading('Calling GenAI…')
+    const toastId = toast.loading('Generating…')
 
     try {
-      console.log('📥 GenAI 인풋 (pitchGroups):', validPitches)
       const prompt = refinePitchesPrompt(validPitches)
       const resultText = await generateText(prompt)
 
@@ -123,13 +122,13 @@ export default function Soundboard() {
         const newPitch = line.split(',').map(p => p.trim())
         onUpdateSoundConfig(id, 'pitch', newPitch)
       })
-      toast.success('Notes refined!')
+    
+    toast.dismiss(toastId)
+    toast.success('Notes refined!')
 
     } catch (err) {
       console.error('Refine error:', err)
-      toast.error(err.message || 'Failed to refine notes.')
-    } finally {
-      toast.dismiss()
+      toast.error(err.message || 'Failed to refine notes!')
     }
   }
 
@@ -140,7 +139,7 @@ export default function Soundboard() {
       return
     }
   
-    const toastId = toast.loading('Saving sounds…')
+    const toastId = toast.loading('Saving…')
   
     try {
       await deleteAllFinalAssets(userId, projectId)
@@ -192,10 +191,10 @@ export default function Soundboard() {
       }
   
       await Tone.context.resume()
-      toast.success('Sounds Saved')
+      toast.success('Sounds Saved!')
     } catch (err) {
       console.error('Error saving sounds:', err)
-      toast.error('Failed to Save')
+      toast.error('Failed to Save!')
     } finally {
       toast.dismiss(toastId)
     }

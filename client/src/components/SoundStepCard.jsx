@@ -17,7 +17,7 @@ export default function SoundStepCard({
 
   const handleGenerateSound = async () => {
     if (!config.cognitivePhase || !config.interactionIntent || !config.urgency) {
-      toast.error('드롭다운 정보를 먼저 입력해주세요')
+      toast.error('Please fill in the details first!')
       return
     }
 
@@ -35,7 +35,7 @@ export default function SoundStepCard({
         parsed = JSON.parse(cleanText)
       } catch (err) {
         console.error('Parsing failed:', err, aiResult)
-        toast.error('AI 결과 파싱 실패')
+        toast.error('Result parsing failed!')
         return
       }
 
@@ -53,9 +53,9 @@ export default function SoundStepCard({
         }
       })
 
-      toast.success('AI 사운드 제안 반영 완료!')
+      toast.success('Sound suggestions applied!')
     } catch (err) {
-      toast.error(err.message || 'AI 호출 실패')
+      toast.error(err.message || 'Sound suggestions failed!')
     }
   }
 

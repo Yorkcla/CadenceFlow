@@ -21,7 +21,7 @@ export default function StepCard({ step, onChange }) {
   const handleAiEdit = async () => {
     const input = step.description?.trim()
     if (!input) {
-      toast.error('먼저 내용을 입력하세요!')
+      toast.error('Please fill in the details first!')
       return
     }
 
@@ -31,14 +31,14 @@ export default function StepCard({ step, onChange }) {
       const result = await generateText(prompt)
       handleChange('description', result)
     } catch (err) {
-      toast.error(err.message || 'AI 편집 실패')
+      toast.error(err.message || 'Text generation failed!')
     }
     setIsEditing(false)
   }
 
   const handleAiImage = async () => {
     if (!step.description?.trim()) {
-      toast.error('먼저 설명을 입력하세요!')
+      toast.error('Please fill in the details first!')
       return
     }
 
@@ -57,7 +57,7 @@ export default function StepCard({ step, onChange }) {
       setImageUrl(url)
       handleChange('imageUrl', url)
     } catch (err) {
-      toast.error(err.message || '이미지 생성 실패')
+      toast.error(err.message || 'Image generation failed!')
     }
     setIsGenerating(false)
   }
@@ -78,7 +78,7 @@ export default function StepCard({ step, onChange }) {
       setImageUrl(url)
       handleChange('imageUrl', url)
       setShowCanvas(false)
-      toast.success('Canvas Saved')
+      toast.success('Canvas Saved!')
     }
   }
 
