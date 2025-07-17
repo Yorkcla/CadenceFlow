@@ -1,7 +1,7 @@
 import React, { useRef, useImperativeHandle, forwardRef } from 'react'
 import Sketch from 'react-p5'
 
-const P5Canvas = forwardRef(({ width = 300, height = 180 }, ref) => {
+const P5Canvas = forwardRef(({ width = 320, height = 240 }, ref) => {
   const canvasRef = useRef(null)
 
   const setup = (p5, canvasParentRef) => {
@@ -18,7 +18,6 @@ const P5Canvas = forwardRef(({ width = 300, height = 180 }, ref) => {
     }
   }
 
-  // ✅ 외부에서 그림을 Blob으로 가져갈 수 있게 ref 메서드 정의
   useImperativeHandle(ref, () => ({
     async getCanvasBlob() {
       if (!canvasRef.current) return null

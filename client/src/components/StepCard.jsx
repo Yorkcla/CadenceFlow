@@ -98,7 +98,7 @@ export default function StepCard({ step, onChange }) {
         )}
         {showCanvas && (
           <div className="absolute inset-0 z-10">
-            <P5Canvas ref={canvasRef} />
+            <P5Canvas ref={canvasRef} width={288} height={192} />
           </div>
         )}
         {!imageUrl && !showCanvas && (
