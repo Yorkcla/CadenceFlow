@@ -92,7 +92,7 @@ export default function StepCard({ step, onChange }) {
         className="text-sm placeholder:text-xs w-full border-b border-gray-300 pb-1 focus:outline-none"
       />
 
-      <div className="relative w-full h-40 border bg-gray-100 rounded overflow-hidden">
+      <div className="relative w-full h-48 border bg-gray-100 rounded overflow-hidden">
         {imageUrl && (
           <img src={imageUrl} alt="Step" className="absolute inset-0 w-full h-full object-cover" />
         )}

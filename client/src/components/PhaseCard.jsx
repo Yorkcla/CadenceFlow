@@ -101,7 +101,7 @@ export default function PhaseCard({ phase }) {
         rows={3}
       />
 
-      <div className="relative w-full h-40 border rounded-lg overflow-hidden">
+      <div className="relative w-full h-60 border rounded-lg overflow-hidden">
         {imageUrl && (
           <img
             src={imageUrl}

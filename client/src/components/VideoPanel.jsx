@@ -54,7 +54,7 @@ export default function VideoPanel({ asset }) {
 
   return (
     <div className="flex-shrink-0 w-[340px] bg-white border-2 border-blue-100 rounded-2xl shadow-lg p-5 space-y-4">
-      <div className="relative w-full h-48 border rounded-lg overflow-hidden bg-gray-100">
+      <div className="relative w-full h-60 border rounded-lg overflow-hidden bg-gray-100">
         {videoUrl ? (
           <video
             ref={videoRef}

@@ -36,7 +36,7 @@ export default function ReviewCard({ asset, onOpenVideo }) {
 
       <div className="text-sm text-gray-600">{asset.description}</div>
 
-      <div className="relative w-full h-48 border rounded-lg overflow-hidden bg-gray-100">
+      <div className="relative w-full h-60 border rounded-lg overflow-hidden bg-gray-100">
         {asset.imageUrl ? (
           <img src={asset.imageUrl} alt="Visual" className="absolute inset-0 w-full h-full object-cover" />
         ) : (

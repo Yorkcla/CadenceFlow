@@ -17,12 +17,12 @@ export default function ProjectNameModal({ onSubmit }) {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Project Title"
+          placeholder="Project title"
           className="w-full border rounded px-3 py-2 text-sm"
         />
         <button
           onClick={handleSubmit}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded text-sm font-semibold"
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded text-sm font-semibold"
         >
           Start
         </button>
