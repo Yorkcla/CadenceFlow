@@ -18,7 +18,7 @@ Given the following user context:
 Design a short interactive sound using up to 4 notes. Focus on **creative and musically interesting combinations** of pitch, rhythm, and duration that reflect the user’s context.
 
 Notes should be:
-- Expressive and distinct (avoid generic or formulaic patterns)
+- Expressive, using extended or altered tones (avoid generic patterns)
 - Thoughtfully spaced in time
 - Varied in pitch and duration for interest
 
