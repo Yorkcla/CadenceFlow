@@ -15,24 +15,32 @@ Given the following user context:
 - Interaction intent: ${interactionIntent}
 - Level of urgency: ${urgency}
 
-Generate a JSON object describing a short sound composed of up to 4 notes. Each note should include:
+Design a short interactive sound using up to 4 notes. Focus on **creative and musically interesting combinations** of pitch, rhythm, and duration that reflect the user’s context.
+
+Notes should be:
+- Expressive and distinct (avoid generic or formulaic patterns)
+- Thoughtfully spaced in time
+- Varied in pitch and duration for interest
+
+Each note includes:
 - pitch: scientific pitch notation (e.g., "c3", "d#4", "g5")
 - rhythm: the start time in seconds (e.g., 0, 0.5, 1.2)
-- duration: how long the note lasts in seconds (e.g., 0.1, 0.5, 1)
+- duration: how long the note lasts in seconds (e.g., 0.2, 0.6, 1)
 
-Also include a master volume level in decibels (default: -6 dB, max: 0 dB).
+Also include:
+- volume: master output level in decibels (default: -6, max: 0)
 
-Output format:
+Only return a valid JSON object. No explanation or comments.
+
+Example:
 {
   "notes": [
-    { "pitch": "c3", "rhythm": 0, "duration": 1 },
-    { "pitch": "e3", "rhythm": 0.5, "duration": 0.5 },
-    { "pitch": "g3", "rhythm": 1.0, "duration": 0.75 }
+    { "pitch": "c3", "rhythm": 0, "duration": 0.5 },
+    { "pitch": "f#4", "rhythm": 0.3, "duration": 0.2 },
+    { "pitch": "d5", "rhythm": 0.6, "duration": 1.1 }
   ],
   "volume": -6
 }
-
-Only return a valid JSON object. Do not include explanations or any extra text.
 `.trim();
 }
 
