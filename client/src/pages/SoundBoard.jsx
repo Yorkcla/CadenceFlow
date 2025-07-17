@@ -96,6 +96,8 @@ export default function Soundboard() {
       id,
       pitch: (config.pitch || []).filter(p => p?.trim())
     }))
+      .filter(({ id }) => selected[`phase-${id}`] || selected[`step-${id}`])
+      .filter(({ pitch }) => pitch.length > 0)
 
     if (!validPitches.some(({ pitch }) => pitch.length > 0)) {
       toast.error('No valid pitch data found.')
@@ -108,7 +110,6 @@ export default function Soundboard() {
       const prompt = refinePitchesPrompt(validPitches)
       const resultText = await generateText(prompt)
 
-      // 줄바꿈 단위로 분리하고 앞에 붙은 번호 제거 (ex. "1. C4, E4")
       const lines = resultText
         .split('\n')
         .map(line => line.replace(/^\d+\.\s*/, '').trim())
@@ -129,7 +130,6 @@ export default function Soundboard() {
       toast.dismiss()
     }
   }
-
 
   const handleSaveSounds = async () => {
     const selectedKeys = Object.keys(selected).filter(k => selected[k])

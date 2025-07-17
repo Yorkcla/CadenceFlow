@@ -65,13 +65,22 @@ export function refinePitchesPrompt(pitchGroups) {
   return `
 You are a helpful assistant who understands musical harmony and voice leading.
 
-Given these pitch sequences, suggest improved or more musically interesting sequences of the same length.
+Given the following pitch sequences, improve each one by making it more harmonically interesting or smoother in voice leading.
+
+Instructions:
+- Do NOT add or remove notes: the number of pitches in each sequence must stay the same
+- Do NOT change the register drastically (keep similar octave ranges)
+- Do NOT include numbering or explanations in your response
 
 Each line corresponds to a separate group:
 ${promptLines}
 
-Please return only the improved pitch sequences per group, in the same order, without explanation.
-Each output should be a comma-separated string like "C4, E4, G4".
+Output format:
+Just return one line per group with improved pitches, like this:
+C4, E4, G4
+D4, F4, A4
+
+Only return the improved sequences. Do NOT include explanations or numbering.
 `.trim()
 }
 
