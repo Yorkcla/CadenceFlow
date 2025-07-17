@@ -58,29 +58,40 @@ Do not include text or narration.
 }
 
 export function refinePitchesPrompt(pitchGroups) {
+  const roleMap = {
+    start: 'tonic function (e.g., C major: C, E, G)',
+    build: 'subdominant function (e.g., F major: F, A, C)',
+    peak: 'dominant function (e.g., G major: G, B, D)',
+    ease: 'submediant function (e.g., A minor: A, C, E)',
+    end: 'tonic function (e.g., C, E, G)',
+    attention: 'non-harmonic or tension notes (e.g., D#, F#, Bb)'
+  }
+
   const promptLines = pitchGroups
-    .map(({ pitch }, i) => `${i + 1}. ${pitch.join(', ')}`)
+    .map(({ pitch, cognitivePhase }, i) => {
+      const role = roleMap[cognitivePhase] || 'freely choose harmonically valid notes'
+      return `${i + 1}. ${pitch.join(', ')} // Try to match: ${role}`
+    })
     .join('\n')
 
   return `
-You are a helpful assistant who understands musical harmony and voice leading.
+You are a helpful assistant that understands musical harmony, voice leading, and tonal functions.
 
-Given the following pitch sequences, improve each one by making it more harmonically interesting or smoother in voice leading.
+Each pitch array below corresponds to a user interaction phase. Your task is to refine the pitch content of each array to reflect its intended harmonic function, while also considering musical flow across arrays — including functional harmonic progression, melodic contour, and voice leading between them.
 
 Instructions:
-- Do NOT add or remove notes: the number of pitches in each sequence must stay the same
-- Do NOT change the register drastically (keep similar octave ranges)
-- Do NOT include numbering or explanations in your response
+- Maintain the number of pitches per group (no adding or removing)
+- Do not change registers drastically
+- Use the suggested harmonic role for each phase to guide your improvement
+- Return only the new pitch sequences, one per line, no explanations or numbering
 
-Each line corresponds to a separate group:
+Here are the sequences:
 ${promptLines}
 
-Output format:
-Just return one line per group with improved pitches, like this:
-C4, E4, G4
-D4, F4, A4
-
-Only return the improved sequences. Do NOT include explanations or numbering.
+Output example:
+C4, E4, G4  
+F4, A4, C5  
+G3, B3, D4  
 `.trim()
 }
 

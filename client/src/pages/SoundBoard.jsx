@@ -94,7 +94,8 @@ export default function Soundboard() {
 
     const validPitches = selectedConfigs.map(({ id, config }) => ({
       id,
-      pitch: (config.pitch || []).filter(p => p?.trim())
+      pitch: (config.pitch || []).filter(p => p?.trim()),
+      cognitivePhase: config.cognitivePhase || ''
     }))
       .filter(({ id }) => selected[`phase-${id}`] || selected[`step-${id}`])
       .filter(({ pitch }) => pitch.length > 0)
@@ -107,6 +108,7 @@ export default function Soundboard() {
     toast.loading('Calling GenAI…')
 
     try {
+      console.log('📥 GenAI 인풋 (pitchGroups):', validPitches)
       const prompt = refinePitchesPrompt(validPitches)
       const resultText = await generateText(prompt)
 
@@ -121,8 +123,8 @@ export default function Soundboard() {
         const newPitch = line.split(',').map(p => p.trim())
         onUpdateSoundConfig(id, 'pitch', newPitch)
       })
-
       toast.success('Notes refined!')
+
     } catch (err) {
       console.error('Refine error:', err)
       toast.error(err.message || 'Failed to refine notes.')
