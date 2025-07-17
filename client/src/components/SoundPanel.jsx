@@ -101,14 +101,14 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
           value={config.instrument || 'Synth'}
           onChange={e => onUpdate(id, 'instrument', e.target.value)}
         >
-          <option value="Synth">Synth</option>
-          <option value="AMSynth">AMSynth</option>
-          <option value="FMSynth">FMSynth</option>
-          <option value="DuoSynth">DuoSynth</option>
-          <option value="MembraneSynth">MembraneSynth</option>
-          <option value="MonoSynth">MonoSynth</option>
-          <option value="MetalSynth">MetalSynth</option>
-          <option value="Sample">Sample</option>
+          <option value="Synth">🎹 Classic (Synth)</option>
+          <option value="AMSynth">🚀 Futuristic (AMSynth)</option>
+          <option value="FMSynth">🧸 Playful (FMSynth)</option>
+          <option value="DuoSynth">🌀 Layered (DuoSynth)</option>
+          <option value="MembraneSynth">🥁 Percussive (MembraneSynth)</option>
+          <option value="MonoSynth">🌰 Rounded (MonoSynth)</option>
+          <option value="MetalSynth">🛠️ Metallic (MetalSynth)</option>
+          <option value="Sample">🎙️ Sampling</option>
         </select>
       </div>
 
