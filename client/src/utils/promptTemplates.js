@@ -57,4 +57,21 @@ Do not include text or narration.
   return String(prompt); 
 }
 
+export function refinePitchesPrompt(pitchGroups) {
+  const promptLines = pitchGroups
+    .map(({ pitch }, i) => `${i + 1}. ${pitch.join(', ')}`)
+    .join('\n')
+
+  return `
+You are a helpful assistant who understands musical harmony and voice leading.
+
+Given these pitch sequences, suggest improved or more musically interesting sequences of the same length.
+
+Each line corresponds to a separate group:
+${promptLines}
+
+Please return only the improved pitch sequences per group, in the same order, without explanation.
+Each output should be a comma-separated string like "C4, E4, G4".
+`.trim()
+}
 

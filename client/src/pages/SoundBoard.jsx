@@ -12,6 +12,8 @@ import { saveSoundConfig } from '../utils/saveSoundConfig'
 import { saveFinalAsset, deleteAllFinalAssets } from '../utils/saveFinalAsset'
 import toast from 'react-hot-toast'
 import * as Tone from 'tone'
+import { refinePitchesPrompt } from '../utils/promptTemplates'
+import { generateText } from '../utils/generateText'
 
 const SESSION_SELECTED_KEY = 'soundboard-selected'
 const SESSION_CONFIG_KEY = 'soundboard-config'
@@ -80,7 +82,54 @@ export default function Soundboard() {
         [key]: value,
       },
     }))
-  }  
+  }
+
+  const handleRefinePitches = async () => {
+    const selectedConfigs = Object.entries(selected)
+      .filter(([key, isSelected]) => isSelected)
+      .map(([key]) => {
+        const [type, id] = key.split('-')
+        return { id, config: soundConfig[id] || {} }
+      })
+
+    const validPitches = selectedConfigs.map(({ id, config }) => ({
+      id,
+      pitch: (config.pitch || []).filter(p => p?.trim())
+    }))
+
+    if (!validPitches.some(({ pitch }) => pitch.length > 0)) {
+      toast.error('No valid pitch data found.')
+      return
+    }
+
+    toast.loading('Calling GenAI…')
+
+    try {
+      const prompt = refinePitchesPrompt(validPitches)
+      const resultText = await generateText(prompt)
+
+      // 줄바꿈 단위로 분리하고 앞에 붙은 번호 제거 (ex. "1. C4, E4")
+      const lines = resultText
+        .split('\n')
+        .map(line => line.replace(/^\d+\.\s*/, '').trim())
+        .filter(line => line.length > 0)
+
+      lines.forEach((line, index) => {
+        const id = validPitches[index]?.id
+        if (!id) return
+        const newPitch = line.split(',').map(p => p.trim())
+        onUpdateSoundConfig(id, 'pitch', newPitch)
+      })
+
+      toast.success('Notes refined!')
+    } catch (err) {
+      console.error('Refine error:', err)
+      toast.error(err.message || 'Failed to refine notes.')
+    } finally {
+      toast.dismiss()
+    }
+  }
+
 
   const handleSaveSounds = async () => {
     const selectedKeys = Object.keys(selected).filter(k => selected[k])
@@ -206,6 +255,7 @@ export default function Soundboard() {
         ))}
 
         <div className="flex flex-col gap-2">
+          <SquareButton onClick={handleRefinePitches}>🎼</SquareButton>
           <SquareButton onClick={handleSaveSounds}>💾</SquareButton>
         </div>
       </div>
