@@ -48,7 +48,7 @@ export default function Onboarding() {
   return (
   <div className="flex flex-col items-center p-6 space-y-6 text-center mt-12">
 
-    <div className="prose prose-sm max-w-2xl text-left w-full">
+    <div className="prose prose-lato prose-sm max-w-2xl text-left w-full">
       <ReactMarkdown>{markdown}</ReactMarkdown>
     </div>
 
