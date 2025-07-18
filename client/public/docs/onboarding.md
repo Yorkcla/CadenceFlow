@@ -1,70 +1,71 @@
 # Welcome to CadenceFlow
 
-**CadenceFlow** helps you design interactive experiences through sound, using principles of **musical tension and release**.  
+**CadenceFlow** helps you design interactive experiences through sound, using **musical tension and release**.  
 This tool guides you through a structured process with three stages: **Storyboarding**, **Sounding**, and **Reviewing**.  
-It integrates AI-assisted generation of text, images, and videos to support creative exploration—especially for non-experts.
+It integrates AI-assisted generation of text, images, and videos to support creative exploration for non-experts.
 
 ---
 
-## 🎬 Storyboarding
+## Storyboarding
 
-The first stage involves defining the interaction flow of your design using visual storyboarding.  
-You can organize the flow into **Phases** and **Steps**, each of which can include text, image, or AI-generated media.
+The first stage focuses on outlining your interaction flow through visual storyboarding. 
+You can structure your design into **Phases** and **Steps**, each accompanied by descriptions and representative images, optionally supported from GenAI.
 
-### 🌀 Phase
+### Phase
 
 A phase represents a broader segment of the interaction, such as a scene or system state.  
-You can describe it with text, upload or draw an image, and optionally generate visuals using AI.
+You can describe it with text, upload or draw an image, and generate visuals using AI.
 
 ![Phase Example](./images/phase-example.png)
 
-### 🪜 Step
+### Step
 
-Each phase can be broken down into smaller **steps**, describing detailed actions or moments.  
-Steps can include AI-generated or user-drawn short videos that build the narrative flow.
+Each phase can be divided into smaller steps that capture specific actions or moments.
+Steps may include descriptions and visuals, either AI generated, user drawn, or uploaded, to construct a cohesive narrative flow.
 
 ![Step Example](./images/step-example.png)
 
 ---
 
-## 🎧 Sounding
+## Sounding
 
-In the second stage, you assign sounds to each phase or step to convey intent, emotion, or urgency.  
-This is done through **card selection** and the **sound panel** interface.
+In the second stage, assign sounds to key phases or steps, along with cognitive states, interaction intent, urgency, and musical tension and release, with helpful AI support.
+This is done through **card selection** and a dedicated **sound panel** interface.
 
-### 🃏 Card Selection
+### Card Selection
 
-Select one or more phase/step cards to configure their associated sounds.  
-You can assign parameters such as **cognitive phase**, **interaction intent**, and **urgency**.
+Select one or more phase or step cards to configure their associated sounds.
+Define parameters like **cognitive phase**, **interaction intent**, and **urgency** to guide AI-assisted sound assignment.
 
 ![Card Selection](./images/card-selection.png)
 
-### 🎛️ Sound Panel
+### Sound Panel
 
-Each selected card opens a **Sound Panel** below it, where you can edit sound settings like pitch, rhythm, tempo, and duration.  
-AI suggestions based on tonal harmony and functional context are available to guide your choices.
+Each selected card opens a sound panel below it, where you can adjust settings such as **pitch**, **rhythm**, **duration**, and **timbre**.
+AI suggestions are generated based on the parameters assigned to each card, along with follow-up recommendations that enhance overall **musical tension and release** throughout the sound flow.
 
 ![Sound Panel](./images/sound-panel.png)
 
 ---
 
-## 📽️ Reviewing
+## Reviewing
 
-The final stage lets you **preview and compare** your interactive sound design.  
-You can view the full visual narrative and hear synchronized sound cues.
+The final stage allows you to **preview and compare** your interactive sound design, with options to **generate videos**.
+You can view the complete visual narrative, hear synchronised sound cues, and create videos with sound using AI assistance. 
 
-### ✅ Final Check
+### Preview and Compare
 
-Review all assigned sounds and visuals in sequence to confirm their timing and effectiveness.
+Review all assigned sounds and visuals in sequence to evaluate their combinations.
+You can also upload multiple projects for side-by-side comparison.
 
 ![Final Overview](./images/final-overview.png)
 
-### 🎬 Video Generation
+### Video Generation
 
-Optionally, generate a video version of your storyboard using GenAI to visualize the final experience.
+Optionally, generate a video version of your storyboard with assigned sounds using GenAI to visualise the final experience.
 
 ![Generated Video](./images/video-generation.png)
 
 ---
 
-> Start designing with CadenceFlow and bring your interactive concepts to life—visually and sonically.
+CadenceFlow makes your story sing 🎵
