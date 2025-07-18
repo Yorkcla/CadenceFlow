@@ -1,10 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import useStore from '../store/useStore'
 import ProjectNameModal from '../components/ProjectNameModal'
+import ReactMarkdown from 'react-markdown'
 
 export default function Onboarding() {
+  const [markdown, setMarkdown] = useState('')
   const {
     userId,
     projectId,
@@ -13,6 +15,13 @@ export default function Onboarding() {
     showProjectModal,
     setShowProjectModal,
   } = useStore()
+
+  useEffect(() => {
+    fetch('/docs/onboarding.md')
+      .then((res) => res.text())
+      .then((text) => setMarkdown(text))
+      .catch((err) => console.error('Markdown load error:', err))
+  }, [])
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -39,25 +48,15 @@ export default function Onboarding() {
   return (
   <div className="flex flex-col items-center p-6 space-y-6 text-center mt-12">
 
-    <div className="text-2xl font-bold text-gray-800">
-      CadenceFlow: Sonic Interactions with Musical Tension and Release
+    <div className="prose prose-sm max-w-2xl text-left w-full">
+      <ReactMarkdown>{markdown}</ReactMarkdown>
     </div>
-
-    <p className="text-gray-600 text-base max-w-2xl">
-    CadenceFlow helps you design interactive experiences by assigning sound cues using musical tension and release. From visual storyboarding to audio mapping, this tool supports your creative process step by step.
-    It consists of three key stages: Storyboarding (where you define task situations requiring sound), Sounding (where you assign appropriate sounds to key moments), and Reviewing (where you preview and compare final designs).
-    With integrated text, image, and video generation powered by GenAI, CadenceFlow enables accessible and streamlined design exploration for non-experts.
-    </p>
-
-    <p className="text-sky-500 font-bold text-sm">
-      Click the black button to start the onboarding tour and explore how it all works!
-    </p>
 
     {showProjectModal && (
       <ProjectNameModal onSubmit={handleProjectNameSubmit} />
     )}
   </div>
-)
+  )
 }
 
 
