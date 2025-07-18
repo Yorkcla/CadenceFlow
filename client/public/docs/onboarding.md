@@ -58,4 +58,4 @@ Optionally, generate a video version of your storyboard with assigned sounds usi
 
 ---
 
-CadenceFlow makes your story sing 🎵
+CadenceFlow makes your story sing 🎶
