@@ -115,11 +115,11 @@ export default function StepCard({ step, onChange }) {
           </div>
         )}
 
-        <MiniSquareButton onClick={handleAiEdit} disabled={isEditing || isGenerating}>
+        <MiniSquareButton onClick={handleAiEdit} disabled={isEditing || isGenerating} title="Text Generation">
           ✏️
         </MiniSquareButton>
 
-        <MiniSquareButton onClick={handleAiImage} disabled={isEditing || isGenerating}>
+        <MiniSquareButton onClick={handleAiImage} disabled={isEditing || isGenerating} title="Image Generation">
           🖼️
         </MiniSquareButton>
 
@@ -132,17 +132,18 @@ export default function StepCard({ step, onChange }) {
         />
         <label
           htmlFor={`upload-${step.id}`}
+          title="Upload Image"
           className="w-8 h-8 text-xs font-medium text-gray-800 flex items-center justify-center hover:bg-gray-100 rounded transition-colors duration-150 disabled:opacity-50"
         >
           📁
         </label>
 
-        <MiniSquareButton onClick={() => setShowCanvas(!showCanvas)}>
+        <MiniSquareButton onClick={() => setShowCanvas(!showCanvas)} title="Draw Image">
           🧑‍🎨
         </MiniSquareButton>
 
         {showCanvas && (
-          <MiniSquareButton onClick={handleCanvasSave} className="bg-green-100">
+          <MiniSquareButton onClick={handleCanvasSave} title="Draw Save">
             💾
           </MiniSquareButton>
         )}

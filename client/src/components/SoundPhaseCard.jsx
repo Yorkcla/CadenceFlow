@@ -81,7 +81,7 @@ export default function SoundPhaseCard({
             onChange={e => onUpdateSoundConfig(idStr, 'cognitivePhase', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
-            <option value="" disabled hidden>Emotional Flow</option>
+            <option value="" disabled>Emotional Flow</option>
             <option value="start">Start</option>
             <option value="rising">Build</option>
             <option value="peak">Peak</option>
@@ -91,11 +91,12 @@ export default function SoundPhaseCard({
           </select>
 
           <select
+            Title="Interaction "
             value={config.interactionIntent || ''}
             onChange={e => onUpdateSoundConfig(idStr, 'interactionIntent', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
-            <option value="" disabled hidden>Interaction Intent</option>
+            <option value="" disabled>Interaction Intent</option>
             <option value="warning">Alert</option>
             <option value="confirmation">Notification</option>
             <option value="welcome">Confirmation</option>
@@ -108,20 +109,20 @@ export default function SoundPhaseCard({
             onChange={e => onUpdateSoundConfig(idStr, 'urgency', e.target.value)}
             className="border rounded px-2 py-1 text-sm"
           >
-            <option value="" disabled hidden>Importance</option>
+            <option value="" disabled>Importance</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
 
           <div className="flex justify-end pt-1text-right flex items-center justify-end gap-2">
-            <MiniSquareButton onClick={handleGenerateSound}>✨</MiniSquareButton>
+            <MiniSquareButton onClick={handleGenerateSound} title="Sound Generation">✨</MiniSquareButton>
           </div>
         </div>
       )}
 
       <div className="text-right flex items-center justify-end gap-2">
-        <MiniSquareButton onClick={onSelect}>✔️</MiniSquareButton>
+        <MiniSquareButton onClick={onSelect} title="Select Card">✔️</MiniSquareButton>
       </div>
     </div>
   )

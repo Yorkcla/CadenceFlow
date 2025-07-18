@@ -256,8 +256,8 @@ export default function Soundboard() {
         ))}
 
         <div className="flex flex-col gap-2">
-          <SquareButton onClick={handleRefinePitches}>🎼</SquareButton>
-          <SquareButton onClick={handleSaveSounds}>💾</SquareButton>
+          <SquareButton onClick={handleRefinePitches} title="CadenceFlow!">🎼</SquareButton>
+          <SquareButton onClick={handleSaveSounds} title="Save All">💾</SquareButton>
         </div>
       </div>
     </div>

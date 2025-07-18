@@ -70,7 +70,7 @@ export default function VideoPanel({ asset }) {
       </div>
 
       <div className="flex items-center justify-between text-sm text-gray-600">
-        <label className="flex items-center gap-1">
+        <label className="flex items-center gap-1" title="Sound Time">
           ⏱️
           <input
             type="number"
@@ -85,10 +85,10 @@ export default function VideoPanel({ asset }) {
       </div>
 
       <div className="flex items-center justify-end gap-2">
-        <MiniSquareButton onClick={handlePlay} disabled={!videoUrl || !asset.soundUrl}>
+        <MiniSquareButton onClick={handlePlay} disabled={!videoUrl || !asset.soundUrl} title="Play Video">
           ▶️ 
         </MiniSquareButton>
-        <MiniSquareButton onClick={handleGenerateVideo} disabled={loading}>
+        <MiniSquareButton onClick={handleGenerateVideo} disabled={loading} title="Video Generation">
           {loading ? '…' : '✨'}
         </MiniSquareButton>
       </div>

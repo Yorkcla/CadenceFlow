@@ -89,9 +89,9 @@ export default function Storyboard() {
           />
         ))}
         <div className="flex flex-col gap-2">
-          <SquareButton onClick={handleAddPhase}>➕</SquareButton>
-          <SquareButton onClick={handleRemoveLastPhase}>❌</SquareButton>
-          <SquareButton onClick={handleSave}>💾</SquareButton>
+          <SquareButton onClick={handleAddPhase} title="Add Phase">➕</SquareButton>
+          <SquareButton onClick={handleRemoveLastPhase} title="Remove Phase">❌</SquareButton>
+          <SquareButton onClick={handleSave} title="Save Phase">💾</SquareButton>
         </div>
       </div>
     </div>

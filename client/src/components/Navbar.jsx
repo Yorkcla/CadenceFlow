@@ -54,10 +54,10 @@ export default function Navbar() {
       {/* 버튼 묶음 */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-gray-700">{projectTitle}</span>
-          <MiniSquareButton onClick={() => navigate('/onboarding', { state: { forceModal: true } })}>
+          <MiniSquareButton onClick={() => navigate('/onboarding', { state: { forceModal: true } })} title="New Project">
             ➕
           </MiniSquareButton>
-          <MiniSquareButton onClick={logout}>
+          <MiniSquareButton onClick={logout} title="Log Out">
             👋
           </MiniSquareButton>
       </div>

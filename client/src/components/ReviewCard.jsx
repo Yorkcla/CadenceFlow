@@ -47,11 +47,11 @@ export default function ReviewCard({ asset, onOpenVideo }) {
       </div>
 
       <div className="text-right flex items-center justify-end gap-2">
-        <MiniSquareButton onClick={handleToggleAudio}>
+        <MiniSquareButton onClick={handleToggleAudio} title="Play Sound">
           {isPlaying ? '⏸️' : '🎵'}
         </MiniSquareButton>
 
-        <MiniSquareButton onClick={onOpenVideo}>
+        <MiniSquareButton onClick={onOpenVideo} title="Create Video">
           🎬
         </MiniSquareButton>
 

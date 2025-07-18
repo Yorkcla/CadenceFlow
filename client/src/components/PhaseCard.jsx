@@ -128,11 +128,11 @@ export default function PhaseCard({ phase }) {
           </div>
         )}
 
-        <MiniSquareButton onClick={handleAiEdit} disabled={loading || imageLoading}>
+        <MiniSquareButton onClick={handleAiEdit} disabled={loading || imageLoading} title="Text Generation">
           ✏️
         </MiniSquareButton>
 
-        <MiniSquareButton onClick={handleAiImage} disabled={loading || imageLoading}>
+        <MiniSquareButton onClick={handleAiImage} disabled={loading || imageLoading} title="Image Generation">
           🖼️
         </MiniSquareButton>
 
@@ -145,23 +145,24 @@ export default function PhaseCard({ phase }) {
         />
         <label
           htmlFor={`upload-${phase.id}`}
+          title="Upload Image"
           className="w-8 h-8 text-xs font-medium text-gray-800 flex items-center justify-center hover:bg-gray-100 rounded transition-colors duration-150 disabled:opacity-50"
         >
           📁
         </label>
 
-        <MiniSquareButton onClick={() => setShowCanvas(!showCanvas)}>
+        <MiniSquareButton onClick={() => setShowCanvas(!showCanvas)} title="Draw Image">
           🧑‍🎨
         </MiniSquareButton>
 
         {showCanvas && (
-          <MiniSquareButton onClick={handleCanvasSave} className="bg-green-100 border border-green-200">
+          <MiniSquareButton onClick={handleCanvasSave} title="Draw Save">
             💾
           </MiniSquareButton>
         )}
 
         <Link to={`/phase/${phase.id}/steps`}>
-          <MiniSquareButton>
+          <MiniSquareButton title="Detail Step">
             📋
           </MiniSquareButton>
         </Link>

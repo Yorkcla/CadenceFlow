@@ -177,7 +177,7 @@ export default function SoundPanel({ id, config = {}, onUpdate, userId, projectI
       </div>
 
       <div className="text-right flex items-center justify-end gap-2">
-        <MiniSquareButton onClick={handlePlay}>🎵</MiniSquareButton>
+        <MiniSquareButton onClick={handlePlay} title="Play Sound">🎵</MiniSquareButton>
       </div>
     </div>
   )

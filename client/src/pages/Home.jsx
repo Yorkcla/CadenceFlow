@@ -24,6 +24,7 @@ export default function Home() {
         <div className="flex items-center gap-2 bg-white-100 px-1 py-1 rounded-lg">
           <button
             onClick={logout}
+            title="Log Out"
             className="w-8 h-8 text-xs font-medium text-gray-800 flex items-center justify-center hover:bg-gray-100 rounded transition-colors duration-150 disabled:opacity-50"
           >
           👋

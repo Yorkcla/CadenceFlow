@@ -94,7 +94,7 @@ export default function Review() {
           onChange={(e) => setOtherTitle(e.target.value)}
           className="placeholder:text-xs border rounded px-3 py-1"
         />
-        <MiniSquareButton onClick={handleLoadOtherProject}>
+        <MiniSquareButton onClick={handleLoadOtherProject} title="Upload Project">
           📂
         </MiniSquareButton>
       </div>
@@ -125,7 +125,7 @@ export default function Review() {
                   </div>
                 ))}
                 <div className="flex flex-col gap-2 flex-shrink-0">
-                  <SquareButton onClick={() => handleDownloadZip(group.projectId)}>
+                  <SquareButton onClick={() => handleDownloadZip(group.projectId)} title="Download File">
                     💾
                   </SquareButton>
                 </div>
