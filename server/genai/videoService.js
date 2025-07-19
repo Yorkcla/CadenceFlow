@@ -8,6 +8,8 @@ export async function generateVideo({ prompt, aspectRatio = '16:9' }) {
     throw new Error('prompt must be a plain string');
   }
 
+  console.log('🎥 Generating video with prompt:', typeof prompt, JSON.stringify(prompt))
+
   let op = await genAI.models.generateVideos({
     model: 'veo-2.0-generate-001',
     prompt,

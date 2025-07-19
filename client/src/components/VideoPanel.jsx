@@ -24,7 +24,6 @@ export default function VideoPanel({ asset }) {
       const prompt = makeVideoPrompt({
         title: asset.title,
         description: asset.description,
-        imageUrl: asset.imageUrl,
       })
 
       const url = await generateVideo({ prompt, aspectRatio: '16:9' })
@@ -45,7 +44,6 @@ export default function VideoPanel({ asset }) {
     videoRef.current.currentTime = 0
     videoRef.current.play()
 
-    // 지정한 초만큼 delay 후 사운드 재생
     setTimeout(() => {
       audioRef.current.currentTime = 0
       audioRef.current.play()
