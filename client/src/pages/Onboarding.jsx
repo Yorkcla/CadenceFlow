@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom'
 import useStore from '../store/useStore'
 import ProjectNameModal from '../components/ProjectNameModal'
 import ReactMarkdown from 'react-markdown'
+import SquareButton from '../components/SquareButton'
+import { Link } from 'react-router-dom'
 
 export default function Onboarding() {
   const [markdown, setMarkdown] = useState('')
@@ -55,6 +57,9 @@ export default function Onboarding() {
     {showProjectModal && (
       <ProjectNameModal onSubmit={handleProjectNameSubmit} />
     )}
+    <Link to="/storyboard">
+      <SquareButton title="CadenceFlow Start">Start</SquareButton>
+    </Link>
   </div>
   )
 }

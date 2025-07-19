@@ -2,6 +2,8 @@
 
 **CadenceFlow** helps you design interactive experiences through sound, using **musical tension and release**. This tool guides you through a structured process with three stages: **Storyboarding**, **Sounding**, and **Reviewing**. It integrates AI-assisted generation of text, images, and videos to support creative exploration for non-experts.
 
+CadenceFlow makes your story sing!
+
 ---
 
 ## Storyboarding
@@ -55,7 +57,3 @@ Review all assigned sounds and visuals in sequence to evaluate their combination
 Optionally, generate a video version of your storyboard with assigned sounds using GenAI to visualise the final experience.
 
 ![Generated Video](./images/video-generation.png)
-
----
-
-CadenceFlow makes your story sing 🎶
