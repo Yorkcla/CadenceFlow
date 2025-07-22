@@ -10,27 +10,30 @@ export function makeSoundDesignPrompt(config) {
   const { cognitivePhase, interactionIntent, urgency } = config;
 
   return `
-Given the following user context:
+Design a short interactive sound sequence (max 4 notes) that reflects the user's current context:
+
+User Context:
 - Emotional flow phase: ${cognitivePhase}
 - Interaction intent: ${interactionIntent}
 - Level of urgency: ${urgency}
 
-Design a short interactive sound using up to 4 notes. Focus on **creative and musically interesting combinations** of pitch, rhythm, and duration that reflect the user’s context.
+Instructions:
+- Focus on combinations of pitch, rhythm, and duration that clearly communicate intent.
+- Some notes must play simultaneously (chords), others sequentially (rhythmic patterns).
+- Use a mix of conventional and expressive tones, including extended or altered pitches.
+- Be concise yet expressive — prioritise clarity and emotional fit.
 
-Notes should be:
-- Expressive, using extended or altered tones (avoid generic patterns)
-- Thoughtfully spaced in time
-- Varied in pitch and duration for interest
-
-Each note includes:
-- pitch: scientific pitch notation (e.g., "c3", "d#4", "g5")
-- rhythm: the start time in seconds (e.g., 0, 0.5, 1.2)
-- duration: how long the note lasts in seconds (e.g., 0.2, 0.6, 1)
+Note format:
+Each note must include:
+- "pitch": in scientific pitch notation (e.g., "c3", "d#4", "g5")
+- "rhythm": onset time in seconds (e.g., 0, 0.5, 1.2)
+- "duration": note length in seconds (e.g., 0.2, 0.6, 1)
 
 Also include:
-- volume: master output level in decibels (default: -6, max: 0)
+- "volume": overall master volume in decibels (e.g., -6, max 0)
 
-Only return a valid JSON object. No explanation or comments.
+Output:
+Return a single **valid JSON object** only. No explanations, text, or formatting outside the JSON.
 
 Example:
 {
@@ -67,39 +70,39 @@ Do not include text or narration.
 
 export function refinePitchesPrompt(pitchGroups) {
   const roleMap = {
-    start: 'tonic function (e.g., C major: C, E, G)',
-    build: 'subdominant function (e.g., F major: F, A, C)',
-    peak: 'dominant function (e.g., G major: G, B, D)',
-    ease: 'submediant function (e.g., A minor: A, C, E)',
-    end: 'tonic function (e.g., C, E, G)',
-    attention: 'non-harmonic or tension notes (e.g., D#, F#, Bb)'
+    start: 'tonic function (e.g., C, E, G in C major)',
+    build: 'subdominant function (e.g., F, A, C in C major)',
+    peak: 'dominant function (e.g., G, B, D in C major)',
+    ease: 'submediant function (e.g., A, C, E in C major)',
+    end: 'tonic function (e.g., C, E, G in C major)',
+    attention: 'non-harmonic or tension notes (e.g., D#, F#, Bb in C major)'
   }
 
   const promptLines = pitchGroups
     .map(({ pitch, cognitivePhase }, i) => {
-      const role = roleMap[cognitivePhase] || 'freely choose harmonically valid notes'
-      return `${i + 1}. ${pitch.join(', ')} // Try to match: ${role}`
+      const role = roleMap[cognitivePhase] || 'harmonically valid notes of your choice'
+      return `// Phase ${i + 1} (${cognitivePhase}): ${pitch.join(', ')} — Try to match: ${role}`
     })
     .join('\n')
 
   return `
-You are a helpful assistant that understands musical harmony, voice leading, and tonal functions.
+You are a helpful assistant that understands tonal harmony, voice leading, and functional progressions.
 
-Each pitch array below corresponds to a user interaction phase. Your task is to refine the pitch content of each array to reflect its intended harmonic function, while also considering musical flow across arrays — including functional harmonic progression, melodic contour, and voice leading between them.
+Each pitch group below corresponds to a phase in user interaction. Your task is to refine each group of pitches so that:
+- It fits its intended harmonic function, and all groups together contribute to a coherent overall progression in the same key
+- It flows well into the next group (considering voice leading and melodic contour)
+- It maintains the same number of notes (do not add or remove any)
+- It preserves the overall design and character of the original group wherever possible
 
-Instructions:
-- Maintain the number of pitches per group (no adding or removing)
-- Do not change registers drastically
-- Use the suggested harmonic role for each phase to guide your improvement
-- Return only the new pitch sequences, one per line, no explanations or numbering
+Return only the refined pitch sequences, one per line, without numbering or extra text.
 
-Here are the sequences:
+Input:
 ${promptLines}
 
-Output example:
-C4, E4, G4  
+Output format (example):
+C4, E4, G4, C5  
 F4, A4, C5  
-G3, B3, D4  
+G3, B3  
 `.trim()
 }
 
