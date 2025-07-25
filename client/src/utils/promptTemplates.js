@@ -93,6 +93,7 @@ Each pitch group below corresponds to a phase in user interaction. Your task is 
 - It flows well into the next group (considering voice leading and melodic contour)
 - It maintains the same number of notes (do not add or remove any)
 - It preserves the overall design and character of the original group wherever possible
+- It explores different major or minor keys, not just C major
 
 Return only the refined pitch sequences, one per line, without numbering or extra text.
 
