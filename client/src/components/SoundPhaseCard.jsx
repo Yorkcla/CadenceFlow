@@ -91,7 +91,7 @@ export default function SoundPhaseCard({
           </select>
 
           <select
-            Title="Interaction "
+            title="Interaction "
             value={config.interactionIntent || ''}
             onChange={e => onUpdateSoundConfig(idStr, 'interactionIntent', e.target.value)}
             className="border rounded px-2 py-1 text-sm"

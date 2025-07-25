@@ -1,11 +1,7 @@
-// src/utils/loadFinalAssets.js
-
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from './firebase'
 
-// 🧩 정렬 + 그룹핑: phase 아래에 step 붙이기
 function groupAndSortAssets(rawData) {
-  // 정렬: type 먼저, 그 다음 id 오름차순
   rawData.sort((a, b) => {
     if (a.type === b.type) {
       return Number(a.id) - Number(b.id)
@@ -14,6 +10,8 @@ function groupAndSortAssets(rawData) {
   })
 
   const phaseMap = {}
+  const orphanSteps = []
+
   rawData.forEach(item => {
     if (item.type === 'phase') {
       phaseMap[item.id] = { ...item, steps: [] }
@@ -21,8 +19,12 @@ function groupAndSortAssets(rawData) {
   })
 
   rawData.forEach(item => {
-    if (item.type === 'step' && item.phaseId && phaseMap[item.phaseId]) {
-      phaseMap[item.phaseId].steps.push(item)
+    if (item.type === 'step') {
+      if (item.phaseId && phaseMap[item.phaseId]) {
+        phaseMap[item.phaseId].steps.push(item)
+      } else {
+        orphanSteps.push(item)
+      }
     }
   })
 
@@ -31,10 +33,13 @@ function groupAndSortAssets(rawData) {
     ...phase.steps.map(step => ({ ...step, type: 'step' }))
   ])
 
-  return grouped
+  const sortedOrphanSteps = orphanSteps.sort((a, b) =>
+    Number(a.phaseId ?? 0) - Number(b.phaseId ?? 0)
+  )
+
+  return [...grouped, ...sortedOrphanSteps]
 }
 
-// 🔵 ID 기반 불러오기
 export async function loadFinalAssets(userId, projectId) {
   if (!userId || !projectId) return []
 
@@ -48,7 +53,6 @@ export async function loadFinalAssets(userId, projectId) {
   return groupAndSortAssets(rawData)
 }
 
-// 🟢 Title 기반 불러오기
 export async function loadFinalAssetsByTitle(userId, title) {
   if (!userId || !title) return []
 

@@ -11,44 +11,23 @@ import { saveAs } from 'file-saver'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../utils/firebase'
 
-function sortByPhaseThenStep(assets) {
-  const phases = assets.filter(a => a.type === 'phase')
-  const steps = assets.filter(a => a.type === 'step')
-
-  const sorted = []
-  phases
-    .sort((a, b) => Number(a.id) - Number(b.id))
-    .forEach(phase => {
-      sorted.push(phase)
-      const linkedSteps = steps
-        .filter(step =>
-          String(step.phaseId) === String(phase.id) ||
-          step.phaseTitle === phase.title
-        )
-        .sort((a, b) => Number(a.id) - Number(b.id))
-      sorted.push(...linkedSteps)
-    })
-
-  return sorted
-}
-
 export default function Review() {
   const { userId, projectId, projectTitle } = useStore()
   const [reviewGroups, setReviewGroups] = useState([])
   const [otherTitle, setOtherTitle] = useState('')
   const [openVideoAssetIds, setOpenVideoAssetIds] = useState({})
 
-  const toggleVideoPanel = (assetId) => {                         
-    setOpenVideoAssetIds(prev => ({                              
-      ...prev, [assetId]: !prev[assetId]                          
-    }))                                                           
-  }                                                               
+  const toggleVideoPanel = (assetId) => {
+    setOpenVideoAssetIds(prev => ({
+      ...prev,
+      [assetId]: !prev[assetId]
+    }))
+  }
 
   useEffect(() => {
     const fetchInitial = async () => {
       const data = await loadFinalAssets(userId, projectId)
-      const sorted = sortByPhaseThenStep(data)
-      setReviewGroups([{ title: projectTitle, assets: sorted, projectId }])
+      setReviewGroups([{ title: projectTitle, assets: data, projectId }])
     }
     fetchInitial()
   }, [userId, projectId, projectTitle])
@@ -67,8 +46,7 @@ export default function Review() {
       return
     }
 
-    const sorted = sortByPhaseThenStep(data)
-    setReviewGroups(prev => [...prev, { title: fetchedTitle, assets: sorted, projectId: otherId }])
+    setReviewGroups(prev => [...prev, { title: fetchedTitle, assets: data, projectId: otherId }])
     setOtherTitle('')
   }
 
@@ -115,7 +93,7 @@ export default function Review() {
                       onOpenVideo={() => toggleVideoPanel(asset.id)}
                     />
 
-                    {openVideoAssetIds[asset.id] && (               
+                    {openVideoAssetIds[asset.id] && (
                       <VideoPanel
                         asset={asset}
                         userId={userId}
