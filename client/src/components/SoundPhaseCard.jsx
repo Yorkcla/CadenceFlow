@@ -22,7 +22,9 @@ export default function SoundPhaseCard({
     }
 
     const prompt = makeSoundDesignPrompt(config)
+
     try {
+      const toastId = toast.loading('Generating…')
       const aiResult = await generateText(prompt)
       let parsed = {}
       try {
@@ -53,9 +55,9 @@ export default function SoundPhaseCard({
         }
       })
 
-      toast.success('Sound suggestions applied!')
+      toast.success('Sound applied!', { id: toastId })
     } catch (err) {
-      toast.error(err.message || 'Sound suggestion failed!')
+      toast.error(err.message || 'Sound failed!', { id: toastId })
     }
   }
 
