@@ -5,7 +5,6 @@ function groupAndSortAssets(rawData) {
   const phaseMap = {}
   const stepMap = {}
 
-  // Phase와 Step을 분리해 저장
   rawData.forEach(item => {
     if (item.type === 'phase') {
       phaseMap[item.id] = { ...item }
@@ -16,20 +15,18 @@ function groupAndSortAssets(rawData) {
     }
   })
 
-  // 모든 phaseId 후보를 정리: 실제 phase + step에만 있는 phaseId
   const allPhaseIds = new Set([
     ...Object.keys(phaseMap),
     ...Object.keys(stepMap).filter(id => id !== '__orphan__')
   ])
 
-  // id 숫자 기준 정렬
   const sortedPhaseIds = Array.from(allPhaseIds).sort((a, b) => Number(a) - Number(b))
 
   const result = []
 
   sortedPhaseIds.forEach(pid => {
     if (phaseMap[pid]) {
-      result.push({ ...phaseMap[pid], type: 'phase' }) // 실제 phase 존재하면 추가
+      result.push({ ...phaseMap[pid], type: 'phase' })
     }
 
     const steps = stepMap[pid] || []
@@ -37,7 +34,6 @@ function groupAndSortAssets(rawData) {
     result.push(...steps.map(step => ({ ...step, type: 'step' })))
   })
 
-  // 진짜 고아 step (phaseId가 undefined/null인 경우)
   const orphanSteps = stepMap['__orphan__'] || []
   orphanSteps.sort((a, b) => Number(a.id) - Number(b.id))
   result.push(...orphanSteps.map(step => ({ ...step, type: 'step' })))
