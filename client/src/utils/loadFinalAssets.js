@@ -2,42 +2,47 @@ import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from './firebase'
 
 function groupAndSortAssets(rawData) {
-  rawData.sort((a, b) => {
-    if (a.type === b.type) {
-      return Number(a.id) - Number(b.id)
-    }
-    return a.type === 'phase' ? -1 : 1
-  })
-
   const phaseMap = {}
-  const orphanSteps = []
+  const stepMap = {}
 
+  // Phase와 Step을 분리해 저장
   rawData.forEach(item => {
     if (item.type === 'phase') {
-      phaseMap[item.id] = { ...item, steps: [] }
+      phaseMap[item.id] = { ...item }
+    } else if (item.type === 'step') {
+      const phaseId = item.phaseId ?? '__orphan__'
+      if (!stepMap[phaseId]) stepMap[phaseId] = []
+      stepMap[phaseId].push(item)
     }
   })
 
-  rawData.forEach(item => {
-    if (item.type === 'step') {
-      if (item.phaseId && phaseMap[item.phaseId]) {
-        phaseMap[item.phaseId].steps.push(item)
-      } else {
-        orphanSteps.push(item)
-      }
-    }
-  })
-
-  const grouped = Object.values(phaseMap).flatMap(phase => [
-    { ...phase, type: 'phase' },
-    ...phase.steps.map(step => ({ ...step, type: 'step' }))
+  // 모든 phaseId 후보를 정리: 실제 phase + step에만 있는 phaseId
+  const allPhaseIds = new Set([
+    ...Object.keys(phaseMap),
+    ...Object.keys(stepMap).filter(id => id !== '__orphan__')
   ])
 
-  const sortedOrphanSteps = orphanSteps.sort((a, b) =>
-    Number(a.phaseId ?? 0) - Number(b.phaseId ?? 0)
-  )
+  // id 숫자 기준 정렬
+  const sortedPhaseIds = Array.from(allPhaseIds).sort((a, b) => Number(a) - Number(b))
 
-  return [...grouped, ...sortedOrphanSteps]
+  const result = []
+
+  sortedPhaseIds.forEach(pid => {
+    if (phaseMap[pid]) {
+      result.push({ ...phaseMap[pid], type: 'phase' }) // 실제 phase 존재하면 추가
+    }
+
+    const steps = stepMap[pid] || []
+    steps.sort((a, b) => Number(a.id) - Number(b.id))
+    result.push(...steps.map(step => ({ ...step, type: 'step' })))
+  })
+
+  // 진짜 고아 step (phaseId가 undefined/null인 경우)
+  const orphanSteps = stepMap['__orphan__'] || []
+  orphanSteps.sort((a, b) => Number(a.id) - Number(b.id))
+  result.push(...orphanSteps.map(step => ({ ...step, type: 'step' })))
+
+  return result
 }
 
 export async function loadFinalAssets(userId, projectId) {

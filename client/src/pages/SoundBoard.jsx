@@ -85,52 +85,61 @@ export default function Soundboard() {
   }
 
   const handleRefinePitches = async () => {
-    const selectedConfigs = Object.entries(selected)
-      .filter(([key, isSelected]) => isSelected)
-      .map(([key]) => {
-        const [type, id] = key.split('-')
-        return { id, config: soundConfig[id] || {} }
+    const orderedSelected = phases.flatMap(phase => {
+      const group = []
+  
+      if (selected[`phase-${phase.id}`]) {
+        group.push({ id: phase.id, type: 'phase' })
+      }
+  
+      const steps = stepsByPhase[phase.id] || []
+      const selectedSteps = steps.filter(step => selected[`step-${step.id}`])
+      group.push(...selectedSteps.map(step => ({ id: step.id, type: 'step' })))
+  
+      return group
+    })
+  
+    const validPitches = orderedSelected
+      .map(({ id }) => {
+        const config = soundConfig[id] || {}
+        return {
+          id,
+          pitch: (config.pitch || []).filter(p => p?.trim()),
+          cognitivePhase: config.cognitivePhase || ''
+        }
       })
-
-    const validPitches = selectedConfigs.map(({ id, config }) => ({
-      id,
-      pitch: (config.pitch || []).filter(p => p?.trim()),
-      cognitivePhase: config.cognitivePhase || ''
-    }))
-      .filter(({ id }) => selected[`phase-${id}`] || selected[`step-${id}`])
-      .filter(({ pitch }) => pitch.length > 0)
-
-    if (!validPitches.some(({ pitch }) => pitch.length > 0)) {
+      .filter(item => item.pitch.length > 0)
+  
+    if (validPitches.length === 0) {
       toast.error('No valid pitch data found!')
       return
     }
-
+  
     const toastId = toast.loading('Generating…')
-
+  
     try {
       const prompt = refinePitchesPrompt(validPitches)
       const resultText = await generateText(prompt)
-
+  
       const lines = resultText
         .split('\n')
         .map(line => line.replace(/^\d+\.\s*/, '').trim())
         .filter(line => line.length > 0)
-
+  
       lines.forEach((line, index) => {
         const id = validPitches[index]?.id
         if (!id) return
         const newPitch = line.split(',').map(p => p.trim())
         onUpdateSoundConfig(id, 'pitch', newPitch)
       })
-    
-    toast.dismiss(toastId)
-    toast.success('Notes refined!')
-
+  
+      toast.dismiss(toastId)
+      toast.success('Notes refined!')
     } catch (err) {
       console.error('Refine error:', err)
       toast.error(err.message || 'Failed to refine notes!')
     }
-  }
+  }  
 
   const handleSaveSounds = async () => {
     const selectedKeys = Object.keys(selected).filter(k => selected[k])
