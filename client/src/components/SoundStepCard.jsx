@@ -83,7 +83,7 @@ export default function SoundStepCard({
           >
             <option value="" disabled>Emotional Flow</option>
             <option value="start">Start</option>
-            <option value="rising">Build</option>
+            <option value="build">Build</option>
             <option value="peak">Peak</option>
             <option value="falling">Ease</option>
             <option value="end">End</option>
