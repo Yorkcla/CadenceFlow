@@ -85,7 +85,7 @@ export default function SoundStepCard({
             <option value="start">Start</option>
             <option value="build">Build</option>
             <option value="peak">Peak</option>
-            <option value="falling">Ease</option>
+            <option value="ease">Ease</option>
             <option value="end">End</option>
             <option value="attention">Attention</option>
           </select>
