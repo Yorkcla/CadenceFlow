@@ -192,8 +192,8 @@ export default function Soundboard() {
           phaseId,
           stepId,
           title: phase?.title || '',
-          description: step?.description || phase?.description || '',
-          imageUrl: step?.imageUrl || phase?.imageUrl || '',
+          description: type === 'step' ? step?.description || '' : phase?.description || '',
+          imageUrl: type === 'step' ? step?.imageUrl || '' : phase?.imageUrl || '',
           soundConfig: config,
           soundUrl
         })
